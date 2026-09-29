@@ -2,7 +2,7 @@ name: Verify workbench interactions
 on:
   push:
     branches: [main]
-    paths: ['index.html', 'app.js', 'styles.css', 'tests/**', '.github/workflows/verify.yml']
+    paths: ['index.html', 'app.js', 'workflow.js', 'styles.css', 'tests/**', '.github/workflows/verify.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -20,6 +20,7 @@ jobs:
         run: |
           python3 -m http.server 8027 &
           node tests/smoke.cjs
+          node tests/workflow.cjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
