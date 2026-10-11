@@ -1,5 +1,5 @@
 const {chromium}=require('playwright');
-(async()=>{require('fs').mkdirSync('screenshots',{recursive:true});const browser=await chromium.launch({headless:true,args:['--no-sandbox']});const page=await browser.newPage({viewport:{width:1440,height:1100}});const errors=[];page.on('console',msg=>{if(msg.text().startsWith('Context restored'))console.log(msg.text())});page.on('pageerror',e=>errors.push(e.message));await page.addInitScript(()=>{const Native=window.AudioContext;if(Native){window.AudioContext=class extends Native{constructor(...args){super(...args);window.__gardenAudio=this;window.__gardenGains=[]}createGain(){const gain=super.createGain();window.__gardenGains.push(gain);return gain}}}});await page.goto('http://localhost:8027');await page.waitForSelector('#intro-play');
+(async()=>{require('fs').mkdirSync('screenshots',{recursive:true});const browser=await chromium.launch({headless:true,args:['--no-sandbox']});const page=await browser.newPage({viewport:{width:1440,height:1100}});const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.addInitScript(()=>{const Native=window.AudioContext;if(Native){window.AudioContext=class extends Native{constructor(...args){super(...args);window.__gardenAudio=this;window.__gardenGains=[]}createGain(){const gain=super.createGain();window.__gardenGains.push(gain);return gain}}}});await page.goto('http://localhost:8027');await page.waitForSelector('#intro-play');
 await page.locator('.garden-experience').scrollIntoViewIfNeeded();
 if(await page.locator('#garden-settings').getAttribute('open')!==null)throw Error('Customization should start collapsed');
 if(await page.locator('#garden-advanced').getAttribute('open')!==null)throw Error('Advanced options should start collapsed');
@@ -125,11 +125,13 @@ await page.selectOption('#garden-setting','enterprise');await page.selectOption(
 if(!await page.locator('#garden-evidence-text').textContent().then(t=>t.includes('restricted notes')&&t.includes('Aviation')))throw Error('Enterprise scenario mismatch');
 await page.selectOption('#garden-industry','medical');
 if(await page.locator('#garden-perspective option[value="student"]').textContent()!=='Care operations user')throw Error('Healthcare role mapping missing');
-await page.selectOption('#garden-industry','custom');await page.fill('#garden-industry-name','Public services <local>');await page.locator('#garden-industry-name').dispatchEvent('change');
+await page.selectOption('#garden-industry','custom');await page.fill('#garden-industry-name','Public services <local>');await page.locator('#garden-industry-name').press('Tab');
 if(!await page.locator('#garden-context-setting').textContent().then(t=>t.includes('Public services <local>')))throw Error('Custom industry not reflected');
 if(!await page.locator('#garden-context-note').textContent().then(t=>t.includes('not automatically validated')))throw Error('Custom industry implies evaluation');
 await page.setViewportSize({width:390,height:844});if(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth))throw Error('Context selectors mobile overflow');
 await page.setViewportSize({width:1440,height:1100});await page.selectOption('#garden-setting','research');await page.selectOption('#garden-industry','general');
+await page.locator('#garden-industry-name').dispatchEvent('change');
+if(await page.locator('#garden-industry').inputValue()!=='general')throw Error('Stale industry event changed context');
 await page.selectOption('#garden-perspective','teacher');await page.locator('#garden-timeline').evaluate(el=>{el.value='6';el.dispatchEvent(new Event('input',{bubbles:true}))});
 await page.locator('[data-specimen="context"]').click();
 if(await page.locator('#garden-verdict').textContent()!=='Not assessed')throw Error('Returning context lost view criteria: '+await page.locator('#garden-rule').textContent()+'; '+await page.locator('#garden-perspective').inputValue());
