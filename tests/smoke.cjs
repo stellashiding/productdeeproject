@@ -55,6 +55,11 @@ await page.locator('[data-agent-turn="12"]').click();
 if(await page.inputValue('#garden-timeline')!=='12')throw Error('Agent handoff not linked to shared timeline');
 if(!await page.locator('#garden-handoff-evidence').textContent().then(t=>t.includes('0.25')))throw Error('Handoff evidence missing');
 await page.locator('#garden-close-evidence').click();
+await page.check('#garden-compare');await page.selectOption('#garden-priority-mode','adaptive');
+await page.screenshot({path:'screenshots/deeproject-layered-desktop.png',fullPage:true});
+for(const width of [390,768]){await page.setViewportSize({width,height:844});if(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth))throw Error('Expanded garden document overflow '+width)}
+await page.screenshot({path:'screenshots/deeproject-layered-mobile.png',fullPage:true});
+await page.setViewportSize({width:1440,height:1100});await page.uncheck('#garden-compare');await page.selectOption('#garden-priority-mode','off');
 await page.locator('#garden-settings summary').first().click();
 await page.fill('#garden-length','48');await page.locator('#garden-length').dispatchEvent('change');
 if(await page.locator('[data-plant]').count()!==144)throw Error('Custom turn count missing');
