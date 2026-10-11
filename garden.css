@@ -98,3 +98,7 @@
 @media(max-width:600px){.garden-3d-marker{max-width:86px;padding:6px}.garden-researcher{max-width:145px;transform:translate(-50%,22px)}}
 
 @media(max-width:600px){#garden-researcher{top:auto!important;bottom:38px;left:50%!important;transform:translateX(-50%)}}
+
+/* Readable spatial-view caption over the 3D preview. */
+.entry-3d-caption{left:50%;right:auto;bottom:24px;transform:translateX(-50%);width:max-content;max-width:calc(100% - 32px);padding:9px 14px;border:1px solid #c4d2bf;border-radius:20px;background:#f8faf3ed;color:#345b47;font:500 11px/1.5 system-ui,sans-serif;letter-spacing:1.1px;box-shadow:0 3px 14px #243b2c0a;z-index:2}
+@media(max-width:600px){.entry-3d-caption{bottom:16px;font-size:9px;padding:7px 11px;letter-spacing:.7px}}
