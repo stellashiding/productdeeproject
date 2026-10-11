@@ -4,3 +4,4 @@
 @media(prefers-reduced-motion:reduce){.garden-world,.garden-plant,.garden-history,.garden-recovery{transition:none}}
 
 .garden-author{display:flex;align-items:center;gap:8px;flex-wrap:wrap;width:100%;font-size:9px;color:#b0c5b7}.garden-author input{flex:1;min-width:170px;max-width:360px;padding:8px 12px;border:1px solid #526f5e;border-radius:7px;background:#11271d;color:#dceade;font-size:10px}.garden-author button{border-radius:7px}
+@media(max-width:600px){.garden-world{overflow-x:auto;transform:none;scrollbar-width:thin;scrollbar-color:#5c8069 #102219}.garden-world svg{min-width:680px}.garden-stage{min-height:0}.garden-row-label{font-size:11px}}
