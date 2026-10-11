@@ -5,6 +5,7 @@ if(await page.locator('#garden-workspace').isVisible())throw Error('Workspace sh
 await page.waitForFunction(()=>Number(document.querySelector('#garden-3d').dataset.frames)>1);
 if(await page.locator('.entry-3d-view').getAttribute('data-renderer')!=='webgl')throw Error('Real 3D renderer not active');
 await page.waitForTimeout(1100);if(await page.locator('#garden-timeline').inputValue()!=='1')throw Error('Story played behind entrance');
+if(await page.locator('.entry-3d-caption').textContent()!=='A SPATIAL VIEW OF AI BEHAVIOR')throw Error('Entry caption changed');
 await page.screenshot({path:'screenshots/deeproject-garden-entrance.png',fullPage:true});
 await page.click('#watch-run');
 if(await page.locator('.garden-experience').getAttribute('data-entry')!=='entering')throw Error('Hero did not trigger entrance');
@@ -14,9 +15,11 @@ if(!await page.locator('#garden-workspace').isVisible())throw Error('Entry did n
 await page.locator('#garden-interior-canvas').scrollIntoViewIfNeeded();await page.waitForFunction(()=>Number(document.querySelector('#garden-interior-canvas').dataset.frames)>1);
 if(await page.locator('[data-3d-plant]').count()!==3)throw Error('3D plant selectors missing');
 if(await page.locator('#garden-interior-canvas').getAttribute('data-layout')!=='continuous-island')throw Error('Continuous garden missing');
-if(await page.locator('#garden-interior-canvas').getAttribute('data-avatar')!=='abstract-feminine')throw Error('Researcher symbol missing');
+if(await page.locator('#garden-interior-canvas').getAttribute('data-avatar')!=='none')throw Error('Avatar should be absent');
+if(await page.locator('#garden-researcher').count())throw Error('Researcher UI should be removed');
+if(await page.locator('#garden-interior-canvas').getAttribute('data-sculpture')!=='twisted-stone')throw Error('Sculpture missing');
 if(await page.locator('#garden-interior-canvas').evaluate(el=>el.getBoundingClientRect().height)<560)throw Error('Garden not enlarged');
-await page.locator('#garden-researcher').click();if(await page.inputValue('#garden-timeline')!=='18')throw Error('Researcher intervention jump failed');
+await page.locator('[data-story-turn="18"]').click();if(await page.inputValue('#garden-timeline')!=='18')throw Error('Human intervention jump failed');
 if(!await page.locator('#garden-human-evidence').textContent().then(t=>t.includes('Human intervention')))throw Error('Human evidence missing');
 await page.locator('.garden-similar summary').click();if(await page.locator('#garden-similar-cases article').count()!==3)throw Error('Example cases missing');
 if(!await page.locator('.garden-similar').textContent().then(t=>t.includes('not embedding retrieval results')))throw Error('Retrieval disclosure missing');
@@ -39,7 +42,7 @@ await page.waitForFunction(()=>document.querySelector('#intro-play').textContent
 await page.waitForFunction(()=>Number(document.querySelector('#garden-timeline').value)>1);
 await page.click('#intro-play');
 await page.screenshot({path:'screenshots/deeproject-garden-initial.png',fullPage:true});
-await page.setViewportSize({width:390,height:844});await page.locator('#garden-interior-canvas').scrollIntoViewIfNeeded();await page.waitForTimeout(200);if(await page.evaluate(()=>{const h=document.querySelector('#garden-researcher').getBoundingClientRect();return [...document.querySelectorAll('[data-3d-plant]')].some(el=>{const r=el.getBoundingClientRect();return h.left<r.right&&h.right>r.left&&h.top<r.bottom&&h.bottom>r.top})}))throw Error('Researcher label overlaps plant on mobile');await page.screenshot({path:'screenshots/deeproject-garden-spatial-mobile.png',fullPage:true});await page.setViewportSize({width:1440,height:1100});
+await page.setViewportSize({width:390,height:844});await page.locator('#garden-interior-canvas').scrollIntoViewIfNeeded();await page.waitForTimeout(200);await page.screenshot({path:'screenshots/deeproject-garden-spatial-mobile.png',fullPage:true});await page.setViewportSize({width:1440,height:1100});
 if(await page.evaluate(()=>Boolean(window.__gardenAudio)))throw Error('Audio initialized before opt-in');
 await page.click('#garden-sound');
 await page.waitForFunction(()=>document.querySelector('#garden-sound').getAttribute('aria-pressed')==='true');
