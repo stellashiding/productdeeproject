@@ -13,6 +13,15 @@ await page.waitForFunction(()=>document.querySelector('.garden-experience').data
 if(!await page.locator('#garden-workspace').isVisible())throw Error('Entry did not reveal workspace');
 await page.locator('#garden-interior-canvas').scrollIntoViewIfNeeded();await page.waitForFunction(()=>Number(document.querySelector('#garden-interior-canvas').dataset.frames)>1);
 if(await page.locator('[data-3d-plant]').count()!==3)throw Error('3D plant selectors missing');
+if(await page.locator('#garden-interior-canvas').evaluate(el=>el.getBoundingClientRect().height)<560)throw Error('Garden not enlarged');
+await page.locator('#garden-researcher').click();if(await page.inputValue('#garden-timeline')!=='18')throw Error('Researcher intervention jump failed');
+if(!await page.locator('#garden-human-evidence').textContent().then(t=>t.includes('Human intervention')))throw Error('Human evidence missing');
+await page.locator('.garden-similar summary').click();if(await page.locator('#garden-similar-cases article').count()!==3)throw Error('Example cases missing');
+if(!await page.locator('.garden-similar').textContent().then(t=>t.includes('not embedding retrieval results')))throw Error('Retrieval disclosure missing');
+await page.screenshot({path:'screenshots/deeproject-researcher-evidence.png',fullPage:true});
+await page.locator('#garden-overview').click();if(await page.locator('.garden-layout').getAttribute('class').then(t=>t.includes('inspecting')))throw Error('Overview failed');
+await page.locator('#intro-reset').click();
+
 if(!await page.locator('#garden-first-hint').isVisible())throw Error('First interaction hint missing');
 if(await page.locator('#garden-settings').getAttribute('open')!==null)throw Error('Customization should start collapsed');
 if(await page.locator('#garden-advanced').getAttribute('open')!==null)throw Error('Advanced options should start collapsed');
@@ -28,7 +37,7 @@ await page.waitForFunction(()=>document.querySelector('#intro-play').textContent
 await page.waitForFunction(()=>Number(document.querySelector('#garden-timeline').value)>1);
 await page.click('#intro-play');
 await page.screenshot({path:'screenshots/deeproject-garden-initial.png',fullPage:true});
-await page.setViewportSize({width:390,height:844});await page.locator('#garden-interior-canvas').scrollIntoViewIfNeeded();await page.waitForTimeout(200);await page.screenshot({path:'screenshots/deeproject-garden-spatial-mobile.png',fullPage:true});await page.setViewportSize({width:1440,height:1100});
+await page.setViewportSize({width:390,height:844});await page.locator('#garden-interior-canvas').scrollIntoViewIfNeeded();await page.waitForTimeout(200);if(await page.evaluate(()=>{const h=document.querySelector('#garden-researcher').getBoundingClientRect();return [...document.querySelectorAll('[data-3d-plant]')].some(el=>{const r=el.getBoundingClientRect();return h.left<r.right&&h.right>r.left&&h.top<r.bottom&&h.bottom>r.top})}))throw Error('Researcher label overlaps plant on mobile');await page.screenshot({path:'screenshots/deeproject-garden-spatial-mobile.png',fullPage:true});await page.setViewportSize({width:1440,height:1100});
 if(await page.evaluate(()=>Boolean(window.__gardenAudio)))throw Error('Audio initialized before opt-in');
 await page.click('#garden-sound');
 await page.waitForFunction(()=>document.querySelector('#garden-sound').getAttribute('aria-pressed')==='true');
