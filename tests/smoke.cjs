@@ -1,5 +1,5 @@
 const {chromium}=require('playwright');
-(async()=>{require('fs').mkdirSync('screenshots',{recursive:true});const browser=await chromium.launch({headless:true,args:['--no-sandbox']});const page=await browser.newPage({viewport:{width:1440,height:1100}});const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.addInitScript(()=>{const Native=window.AudioContext;if(Native){window.AudioContext=class extends Native{constructor(...args){super(...args);window.__gardenAudio=this;window.__gardenGains=[]}createGain(){const gain=super.createGain();window.__gardenGains.push(gain);return gain}}}});await page.goto('http://localhost:8027');await page.waitForSelector('#intro-play');
+(async()=>{require('fs').mkdirSync('screenshots',{recursive:true});const browser=await chromium.launch({headless:true,args:['--no-sandbox']});const page=await browser.newPage({viewport:{width:1440,height:1100}});const errors=[];page.on('console',msg=>{if(msg.text().startsWith('Context restored'))console.log(msg.text())});page.on('pageerror',e=>errors.push(e.message));await page.addInitScript(()=>{const Native=window.AudioContext;if(Native){window.AudioContext=class extends Native{constructor(...args){super(...args);window.__gardenAudio=this;window.__gardenGains=[]}createGain(){const gain=super.createGain();window.__gardenGains.push(gain);return gain}}}});await page.goto('http://localhost:8027');await page.waitForSelector('#intro-play');
 await page.locator('.garden-experience').scrollIntoViewIfNeeded();
 if(await page.locator('#garden-settings').getAttribute('open')!==null)throw Error('Customization should start collapsed');
 if(await page.locator('#garden-advanced').getAttribute('open')!==null)throw Error('Advanced options should start collapsed');
@@ -132,7 +132,7 @@ await page.setViewportSize({width:390,height:844});if(await page.evaluate(()=>do
 await page.setViewportSize({width:1440,height:1100});await page.selectOption('#garden-setting','research');await page.selectOption('#garden-industry','general');
 await page.selectOption('#garden-perspective','teacher');await page.locator('#garden-timeline').evaluate(el=>{el.value='6';el.dispatchEvent(new Event('input',{bubbles:true}))});
 await page.locator('[data-specimen="context"]').click();
-if(await page.locator('#garden-verdict').textContent()!=='Not assessed')throw Error('Returning context lost view criteria');
+if(await page.locator('#garden-verdict').textContent()!=='Not assessed')throw Error('Returning context lost view criteria: '+await page.locator('#garden-rule').textContent()+'; '+await page.locator('#garden-perspective').inputValue());
 await page.selectOption('#garden-perspective','shared');await page.locator('#garden-timeline').evaluate(el=>{el.value='17';el.dispatchEvent(new Event('input',{bubbles:true}))});
 if(await page.locator('#garden-close-evidence').isVisible())await page.locator('#garden-close-evidence').click();
 await page.locator('#garden-settings > summary').click();
