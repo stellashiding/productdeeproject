@@ -92,3 +92,7 @@
 @media(max-width:600px){.garden-panorama.spatial .garden-interior-3d{height:460px}.garden-spatial-toolbar{left:12px;right:12px;font-size:7px;letter-spacing:.5px}.garden-spatial-toolbar button{font-size:9px;padding:7px 9px}.garden-researcher{max-width:135px;padding:6px 8px}.garden-researcher strong{font-size:10px}.garden-researcher small{font-size:8px}.garden-panorama.spatial .garden-individuals{gap:7px}.garden-panorama.spatial .garden-individual{padding:7px 10px}}
 
 @media(max-width:600px){.garden-3d-marker{max-width:86px;padding:6px}.garden-researcher{transform:translate(-50%,16px)}}
+
+/* Modern sculpture garden: airy sky, light labels and a floating researcher symbol. */
+.garden-panorama.spatial .garden-world{background:#edf2e8}.garden-panorama.spatial .garden-individual{background:#f8faf4b0;border-color:#d4ddcf80;box-shadow:none}.garden-3d-marker{background:#fbfff8df;border-color:#d2dfd480;box-shadow:0 3px 14px #486d6008;border-radius:18px;padding:8px 12px}.garden-researcher{border-radius:20px;background:#f8fcffeb;border-color:#bccfd9;color:#536b80;box-shadow:0 4px 18px #46778a0c}.garden-spatial-toolbar{color:#627f88}.garden-spatial-toolbar button{background:#f7fcffb8;border-color:#c5d9de;color:#567580}.garden-spatial-note{color:#728b80}.garden-stage .garden-caption{background:linear-gradient(115deg,#f1f5ed,#f5f6ee)}
+@media(max-width:600px){.garden-3d-marker{max-width:86px;padding:6px}.garden-researcher{max-width:145px;transform:translate(-50%,22px)}}
