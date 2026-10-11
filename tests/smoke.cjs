@@ -13,6 +13,11 @@ if(await page.evaluate(()=>Boolean(window.__gardenAudio)))throw Error('Audio ini
 await page.click('#garden-sound');
 await page.waitForFunction(()=>document.querySelector('#garden-sound').getAttribute('aria-pressed')==='true');
 if(await page.evaluate(()=>window.__gardenAudio.state)!=='running')throw Error('Sound did not start');
+await page.click('#intro-play');await page.waitForTimeout(250);
+if(await page.evaluate(()=>window.__gardenGains[1].gain.value)<.1)throw Error('Music did not start with playback');
+await page.click('#intro-play');await page.waitForTimeout(250);
+if(await page.evaluate(()=>window.__gardenGains[1].gain.value)>.002)throw Error('Music did not stop on pause');
+
 await page.click('#garden-sound');
 await page.waitForTimeout(250);
 if(await page.evaluate(()=>window.__gardenGains[0].gain.value)>.002)throw Error('Mute failed');
