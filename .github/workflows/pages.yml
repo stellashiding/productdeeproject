@@ -25,7 +25,7 @@ jobs:
       - name: Prepare static site
         run: |
           mkdir _site
-          cp index.html styles.css app.js workflow.js garden.js garden.css _site/
+          cp index.html styles.css app.js workflow.js garden.js garden.css garden-3d.js _site/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
