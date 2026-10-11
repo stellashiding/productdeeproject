@@ -45,7 +45,7 @@ window.gardenPortal3D = (canvas,options={}) => {
   const gl=canvas.getContext('webgl',{alpha:true,antialias:true,powerPreference:'low-power'});
   if(!gl)return null;
   const vs=`attribute vec3 p;attribute vec3 n;uniform mat4 vp;uniform vec3 offset;uniform vec3 size;varying vec3 normal;varying vec3 world;void main(){world=p*size+offset;normal=normalize(n/size);gl_Position=vp*vec4(world,1.);}`;
-  const fs=`precision mediump float;varying vec3 normal;varying vec3 world;uniform vec4 color;uniform vec3 eye;uniform float glow;uniform float clock;void main(){vec3 N=normalize(normal);float light=.73+.27*max(dot(N,normalize(vec3(-.5,1.,.7))),0.);float rim=pow(1.-abs(dot(N,normalize(eye-world))),3.);vec3 c=color.rgb*light+rim*.045;float fog=smoothstep(14.,35.,length(eye-world));c=mix(c,vec3(.91,.95,.94),fog);float a=color.a;if(glow>0.){float stripe=.5+.5*sin(world.x*2.+world.y*3.-clock*.7);c=mix(c,vec3(.80,.94,.90),.25+stripe*.12);a*=.38+rim*.5+stripe*.07;}gl_FragColor=vec4(c,a);}`;
+  const fs=`precision mediump float;varying vec3 normal;varying vec3 world;uniform vec4 color;uniform vec3 eye;uniform float glow;uniform float clock;void main(){vec3 N=normalize(normal);float light=.73+.27*max(dot(N,normalize(vec3(-.5,1.,.7))),0.);float rim=pow(1.-abs(dot(N,normalize(eye-world))),3.);vec3 c=color.rgb*light+rim*.045;float fog=smoothstep(18.,55.,length(eye-world));c=mix(c,vec3(.91,.95,.94),fog);float a=color.a;if(glow<0.)a*=1.-smoothstep(16.,42.,length(eye-world));if(glow>0.){float stripe=.5+.5*sin(world.x*2.+world.y*3.-clock*.7);c=mix(c,vec3(.80,.94,.90),.25+stripe*.12);a*=.38+rim*.5+stripe*.07;}gl_FragColor=vec4(c,a);}`;
   const shader=(type,code)=>{const s=gl.createShader(type);gl.shaderSource(s,code);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error('Portal shader failed');return s};
   let program,shaders=[];
   try{shaders=[shader(gl.VERTEX_SHADER,vs),shader(gl.FRAGMENT_SHADER,fs)];program=gl.createProgram();shaders.forEach(s=>gl.attachShader(program,s));gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error('Portal program failed')}catch{shaders.forEach(s=>gl.deleteShader(s));return null}
@@ -69,8 +69,8 @@ window.gardenPortal3D = (canvas,options={}) => {
   const multiply=(a,b)=>Array.from({length:16},(_,i)=>{const r=i%4,c=Math.floor(i/4);return a[r]*b[c*4]+a[r+4]*b[c*4+1]+a[r+8]*b[c*4+2]+a[r+12]*b[c*4+3]});
   const objects=[],add=(m,o,size,c,glow=0)=>objects.push({m,o,size,c,glow});const green=[.39,.55,.40,1],stone=[.89,.88,.81,1],grass=[.76,.82,.68,1],water=[.57,.76,.73,1];
   // Open terrain extends beyond the frame rather than ending at a platform edge.
-  add(box,[0,-.28,-12],[80,.18,80],[.86,.91,.85,1]);
-  const plantingBand=width=>{const v=[],tri=(a,b,c)=>[a,b,c].forEach(p=>v.push(...p,0,1,0));for(let i=0;i<48;i++){const x=-6.8+i*13.6/48,y=x+13.6/48,z=.025*x*x,w=.025*y*y;const a=[x,0,z-width],b=[x,0,z+width],c=[y,0,w+width],d=[y,0,w-width];tri(a,b,c);tri(a,c,d)}return mesh(v)};
+  add(box,[0,-.28,-12],[80,.18,80],[.86,.91,.85,1],-1);
+  const plantingBand=width=>{const v=[],tri=(a,b,c)=>[a,b,c].forEach(p=>v.push(...p,0,1,0));for(let i=0;i<48;i++){const x=-6.8+i*13.6/48,y=x+13.6/48,z=.025*x*x,w=.025*y*y;const cap=q=>width*Math.sqrt(Math.max(0,1-Math.pow(Math.max(0,Math.abs(q)-5.5)/1.3,2))),wx=cap(x),wy=cap(y);const a=[x,0,z-wx],b=[x,0,z+wx],c=[y,0,w+wy],d=[y,0,w-wy];tri(a,b,c);tri(a,c,d)}return mesh(v)};
   const bandEdge=plantingBand(1.36),bandSoil=plantingBand(1.24),bandGrass=plantingBand(1.15);
   for(const x of [-7.5,7.5])for(const z of [-6,-1,4]){add(box,[x,.45,z],[.045,.45,.045],[.48,.48,.37,1]);add(orb,[x,1.65,z],[.50,.87,.50],[.39,.58,.45,1])}
   // Small rear water feature and one sculptural stone loop.
