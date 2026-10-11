@@ -1,6 +1,7 @@
 const {chromium}=require('playwright');
 (async()=>{require('fs').mkdirSync('screenshots',{recursive:true});const browser=await chromium.launch({headless:true,args:['--no-sandbox']});const page=await browser.newPage({viewport:{width:1440,height:1100}});const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.addInitScript(()=>{const Native=window.AudioContext;if(Native){window.AudioContext=class extends Native{constructor(...args){super(...args);window.__gardenAudio=this;window.__gardenGains=[]}createGain(){const gain=super.createGain();window.__gardenGains.push(gain);return gain}}}});await page.goto('http://localhost:8027');await page.waitForSelector('#intro-play');
 await page.locator('.garden-experience').scrollIntoViewIfNeeded();
+if(!await page.locator('.french-landscape .french-fountain').count())throw Error('Formal garden fountain missing');
 if(await page.locator('[data-specimen]').count()!==3)throw Error('Individual specimens missing');
 if(!await page.locator('[data-specimen="context"] .wood').count())throw Error('Context tree missing');
 if(!await page.locator('[data-specimen="accuracy"] .fern-leaf').count())throw Error('Accuracy fern missing');
