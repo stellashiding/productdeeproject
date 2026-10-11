@@ -72,8 +72,8 @@ window.interactionGarden = (() => {
   function play(){if(!visible||document.hidden||userPaused||timer)return;ambient();document.querySelector('#intro-play').textContent='Ⅱ Pause story';document.querySelector('#garden-stage').classList.add('playing');timer=setTimeout(()=>{timer=null;frame=frame===totalTurns?1:frame+1;paint();cue(turnSound());play()},frame===totalTurns?3500:frame===17||frame===19?1800:850);}
   function visibility(){if(document.hidden)pause();else play()}
   function motion(){if(reduced.matches)pause(true)}
-  function mount(){frame=1;selected=0;totalTurns=24;inspectedTurn=1;rules=['accuracy','context','rhythm'];userPaused=reduced.matches;world();paint();const el=document.querySelector('.garden-experience');observer=new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;if(visible)play();else pause()},{threshold:.15});observer.observe(el);
-    document.querySelector('#intro-play').onclick=()=>{if(timer)pause(true);else{userPaused=false;play()}};
+  function mount(){frame=1;selected=0;totalTurns=24;inspectedTurn=1;rules=['accuracy','context','rhythm'];userPaused=reduced.matches;world();paint();const el=document.querySelector('.garden-experience');observer=new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;if(visible)play();else pause()},{threshold:.01});observer.observe(el);
+    document.querySelector('#intro-play').onclick=()=>{if(timer)pause(true);else{userPaused=false;visible=true;play()}};
     document.querySelector('#intro-reset').onclick=()=>{pause();frame=1;paint();userPaused=reduced.matches;play()};
     document.querySelector('#garden-timeline').oninput=e=>{pause(true);frame=+e.target.value;paint();cue(turnSound())};
     document.querySelector('#garden-length').onchange=e=>{const value=Number(e.target.value);if(!Number.isInteger(value)||value<4||value>60){e.target.value=totalTurns;return}pause(true);totalTurns=value;frame=Math.min(frame,totalTurns);document.querySelector('#garden-timeline').max=totalTurns;world();paint()};
