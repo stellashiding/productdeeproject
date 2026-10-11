@@ -13,6 +13,14 @@ if(await page.evaluate(()=>Boolean(window.__gardenAudio)))throw Error('Audio ini
 await page.click('#garden-sound');
 await page.waitForFunction(()=>document.querySelector('#garden-sound').getAttribute('aria-pressed')==='true');
 if(await page.evaluate(()=>window.__gardenAudio.state)!=='running')throw Error('Sound did not start');
+await page.locator('.garden-experience').scrollIntoViewIfNeeded();await page.click('#intro-play');
+await page.waitForFunction(()=>document.querySelector('#intro-play').textContent.includes('Pause'),null,{timeout:4000}).catch(async e=>{console.log('Playback debug',errors,await page.evaluate(()=>({play:document.querySelector('#intro-play').textContent,rect:document.querySelector('.garden-experience').getBoundingClientRect().toJSON(),hidden:document.hidden})));throw e});
+await page.waitForTimeout(600);
+console.log('Audio playback check',await page.evaluate(()=>({state:window.__gardenAudio.state,time:window.__gardenAudio.currentTime,gains:window.__gardenGains.slice(0,2).map(g=>g.gain.value),play:document.querySelector('#intro-play').textContent})));
+if(await page.evaluate(()=>window.__gardenGains[1].gain.value)<.1)throw Error('Music did not start with playback');
+await page.click('#intro-play');await page.waitForTimeout(250);
+if(await page.evaluate(()=>window.__gardenGains[1].gain.value)>.002)throw Error('Music did not stop on pause');
+
 await page.click('#garden-sound');
 await page.waitForTimeout(250);
 if(await page.evaluate(()=>window.__gardenGains[0].gain.value)>.002)throw Error('Mute failed');
