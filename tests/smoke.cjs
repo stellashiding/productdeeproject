@@ -1,5 +1,5 @@
 const {chromium}=require('playwright');
-(async()=>{require('fs').mkdirSync('screenshots',{recursive:true});const browser=await chromium.launch({headless:true,args:['--no-sandbox']});const page=await browser.newPage({viewport:{width:1440,height:1100}});const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('http://localhost:8027');await page.waitForSelector('#intro-play');
+(async()=>{require('fs').mkdirSync('screenshots',{recursive:true});const browser=await chromium.launch({headless:true,args:['--no-sandbox']});const page=await browser.newPage({viewport:{width:1440,height:1100}});const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.addInitScript(()=>{const Native=window.AudioContext;if(Native){window.AudioContext=class extends Native{constructor(...args){super(...args);window.__gardenAudio=this;window.__gardenGains=[]}createGain(){const gain=super.createGain();window.__gardenGains.push(gain);return gain}}}});await page.goto('http://localhost:8027');await page.waitForSelector('#intro-play');
 await page.locator('.garden-experience').scrollIntoViewIfNeeded();
 if(await page.locator('[data-specimen]').count()!==3)throw Error('Individual specimens missing');
 if(!await page.locator('[data-specimen="context"] .wood').count())throw Error('Context tree missing');
@@ -9,6 +9,21 @@ await page.waitForFunction(()=>document.querySelector('#intro-play').textContent
 await page.waitForFunction(()=>Number(document.querySelector('#garden-timeline').value)>1);
 await page.click('#intro-play');
 await page.screenshot({path:'screenshots/deeproject-garden-initial.png',fullPage:true});
+if(await page.evaluate(()=>Boolean(window.__gardenAudio)))throw Error('Audio initialized before opt-in');
+await page.click('#garden-sound');
+await page.waitForFunction(()=>document.querySelector('#garden-sound').getAttribute('aria-pressed')==='true');
+if(await page.evaluate(()=>window.__gardenAudio.state)!=='running')throw Error('Sound did not start');
+await page.click('#garden-sound');
+await page.waitForTimeout(250);
+if(await page.evaluate(()=>window.__gardenGains[0].gain.value)>.002)throw Error('Mute failed');
+await page.fill('#garden-length','48');await page.locator('#garden-length').dispatchEvent('change');
+if(await page.locator('[data-plant]').count()!==144)throw Error('Custom turn count missing');
+await page.locator('#garden-timeline').evaluate(el=>{el.value='30';el.dispatchEvent(new Event('input',{bubbles:true}))});
+if(await page.locator('#garden-verdict').textContent()!=='Not assessed')throw Error('Extended turns invented evidence');
+await page.fill('#garden-length','12');await page.locator('#garden-length').dispatchEvent('change');
+if(await page.inputValue('#garden-timeline')!=='12')throw Error('Timeline not clamped');
+if(await page.locator('#garden-repair').isVisible())throw Error('Repair beyond timeline length');
+await page.fill('#garden-length','24');await page.locator('#garden-length').dispatchEvent('change');
 const frozen=await page.inputValue('#garden-timeline');
 await page.waitForTimeout(1200);
 if(await page.inputValue('#garden-timeline')!==frozen)throw Error('Garden pause failed');
@@ -34,4 +49,5 @@ if(await page.locator('#garden-verdict').textContent()!=='Not assessed')throw Er
 await page.getByRole('button',{name:'Remove Custom criterion',exact:true}).click();
 await page.screenshot({path:'screenshots/deeproject-intro.png',fullPage:true});
 await page.goto('http://localhost:8027/#diagnostics');
+await page.waitForFunction(()=>!window.__gardenAudio||window.__gardenAudio.state==='closed');
 await page.waitForSelector('#replay');await page.screenshot({path:'screenshots/deeproject-desktop.png',fullPage:true});await page.click('[data-evidence="2"]');await page.waitForSelector('dialog[open]');await page.click('.close');await page.click('#replay');await page.waitForFunction(()=>document.querySelector('#replay-status').textContent==='Trajectory complete');await page.click('[data-page="harness"]');await page.fill('#rule','Test policy');await page.click('#save');await page.reload();if(await page.inputValue('#rule')!=='Test policy')throw Error('save failed');const d=page.waitForEvent('download');await page.click('#export-config');const download=await d;if(download.suggestedFilename()!=='deeproject-harness.json')throw Error('export failed');await page.click('#ci');await page.waitForSelector('#download-ci');await page.click('.close');await page.click('[data-page="monitor"]');await page.click('#pause');await page.click('#trigger');await page.waitForSelector('tr.intercepted');await page.click('#review-session');await page.waitForSelector('dialog[open]');await page.click('.close');await page.screenshot({path:'screenshots/deeproject-monitor.png',fullPage:true});await page.setViewportSize({width:390,height:844});for(const route of ['home','diagnostics','harness','monitor']){await page.goto('http://localhost:8027/#'+route);await page.waitForTimeout(100);const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth);if(overflow)throw Error('Horizontal document overflow '+route)}await page.goto('http://localhost:8027/#home');await page.screenshot({path:'screenshots/deeproject-intro-mobile.png',fullPage:true});await page.emulateMedia({reducedMotion:'reduce'});await page.reload();await page.locator('.agent-experience').scrollIntoViewIfNeeded();await page.waitForTimeout(2300);if(await page.inputValue('#garden-timeline')!=='1')throw Error('Reduced motion autoplay');if(await page.locator('a[href="mailto:deeprojectai@gmail.com"]').count()!==1)throw Error('Contact link missing');if(await page.getByRole('link',{name:'Get in touch'}).getAttribute('href')!=='mailto:deeprojectai@gmail.com?subject=Deeproject%20%E2%80%94%20Product%20inquiry')throw Error('Inquiry link incorrect');if(errors.length)throw Error(errors.join('\n'));console.log('PASS: replay, evidence dialogs, local persistence, JSON download, CI setup, monitor interception, mobile overflow, no JS errors');await browser.close()})();
