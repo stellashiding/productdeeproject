@@ -121,7 +121,7 @@ await page.setViewportSize({width:1440,height:1100});await page.selectOption('#g
 await page.selectOption('#garden-perspective','teacher');await page.locator('#garden-timeline').evaluate(el=>{el.value='6';el.dispatchEvent(new Event('input',{bubbles:true}))});
 if(await page.locator('#garden-verdict').textContent()!=='Not assessed')throw Error('Returning context lost view criteria');
 await page.selectOption('#garden-perspective','shared');await page.locator('#garden-timeline').evaluate(el=>{el.value='17';el.dispatchEvent(new Event('input',{bubbles:true}))});
-await page.locator('#garden-perspectives summary').first().click();await page.locator('#garden-close-evidence').click();
+await page.locator('#garden-perspectives summary').first().click();if(await page.locator('#garden-close-evidence').isVisible())await page.locator('#garden-close-evidence').click();
 await page.screenshot({path:'screenshots/deeproject-intro.png',fullPage:true});
 await page.goto('http://localhost:8027/#diagnostics');
 await page.waitForFunction(()=>!window.__gardenAudio||window.__gardenAudio.state==='closed');
