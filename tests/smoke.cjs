@@ -4,6 +4,7 @@ await page.locator('.garden-experience').scrollIntoViewIfNeeded();
 await page.waitForFunction(()=>document.querySelector('#intro-play').textContent.includes('Pause'));
 await page.waitForFunction(()=>Number(document.querySelector('#garden-timeline').value)>1);
 await page.click('#intro-play');
+await page.screenshot({path:'screenshots/deeproject-garden-initial.png',fullPage:true});
 const frozen=await page.inputValue('#garden-timeline');
 await page.waitForTimeout(1200);
 if(await page.inputValue('#garden-timeline')!==frozen)throw Error('Garden pause failed');
