@@ -2,6 +2,7 @@ const {chromium}=require('playwright');
 (async()=>{require('fs').mkdirSync('screenshots',{recursive:true});const browser=await chromium.launch({headless:true,args:['--no-sandbox']});const page=await browser.newPage({viewport:{width:1440,height:1100}});const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.addInitScript(()=>{const Native=window.AudioContext;if(Native){window.AudioContext=class extends Native{constructor(...args){super(...args);window.__gardenAudio=this;window.__gardenGains=[]}createGain(){const gain=super.createGain();window.__gardenGains.push(gain);return gain}}}});await page.goto('http://localhost:8027');await page.waitForSelector('#garden-enter');
 await page.locator('.garden-experience').scrollIntoViewIfNeeded();
 if(await page.locator('#garden-workspace').isVisible())throw Error('Workspace should wait for entry');
+if(await page.locator('.entry-lens .lens-frame').count()!==3)throw Error('Time lens history layers missing');
 await page.waitForTimeout(1100);if(await page.locator('#garden-timeline').inputValue()!=='1')throw Error('Story played behind entrance');
 await page.screenshot({path:'screenshots/deeproject-garden-entrance.png',fullPage:true});
 await page.click('#watch-run');
