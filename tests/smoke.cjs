@@ -17,6 +17,7 @@ if(await page.locator('.garden-plant.issue.revealed').count()===0)throw Error('E
 await page.locator('#garden-timeline').evaluate(el=>{el.value='17';el.dispatchEvent(new Event('input',{bubbles:true}))});
 await page.selectOption('#garden-custom','explore');
 if(!await page.locator('#garden-verdict').textContent().then(t=>t==='Meets criterion'))throw Error('Custom criterion evaluation failed');
+if(await page.locator('#garden-repair').isVisible())throw Error('Repair shown for passing criterion');
 await page.selectOption('#garden-add','privacy');
 await page.locator('[data-plant="privacy:17"]').click();
 if(await page.locator('#garden-verdict').textContent()!=='Not assessed')throw Error('Unknown conflated with pass');
