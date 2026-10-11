@@ -26,3 +26,6 @@ No API keys, backend, build step, or external JavaScript dependencies. Google Fo
 - Correction at Turn 4 is labeled separately from the retained trajectory consistency penalty.
 
 Run `node tests/smoke.cjs` and `node tests/workflow.cjs` with Playwright Chromium installed and a local server on port 8027.
+
+## Interaction Garden
+The homepage presents a 24-turn authored music-programming example with selectable behavior criteria, a customizable rhythm requirement, evidence inspection, and correction replay. Switching criteria re-evaluates fixture labels only; it does not run a model. Privacy is explicitly unassessed. Earlier problems remain visible after recovery. Autoplay pauses off-screen and in background tabs, respects reduced motion, and supports manual timeline navigation.
