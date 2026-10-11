@@ -13,6 +13,8 @@ await page.waitForFunction(()=>document.querySelector('.garden-experience').data
 if(!await page.locator('#garden-workspace').isVisible())throw Error('Entry did not reveal workspace');
 await page.locator('#garden-interior-canvas').scrollIntoViewIfNeeded();await page.waitForFunction(()=>Number(document.querySelector('#garden-interior-canvas').dataset.frames)>1);
 if(await page.locator('[data-3d-plant]').count()!==3)throw Error('3D plant selectors missing');
+if(await page.locator('#garden-interior-canvas').getAttribute('data-layout')!=='continuous-island')throw Error('Continuous garden missing');
+if(await page.locator('#garden-interior-canvas').getAttribute('data-avatar')!=='abstract-feminine')throw Error('Researcher symbol missing');
 if(await page.locator('#garden-interior-canvas').evaluate(el=>el.getBoundingClientRect().height)<560)throw Error('Garden not enlarged');
 await page.locator('#garden-researcher').click();if(await page.inputValue('#garden-timeline')!=='18')throw Error('Researcher intervention jump failed');
 if(!await page.locator('#garden-human-evidence').textContent().then(t=>t.includes('Human intervention')))throw Error('Human evidence missing');
