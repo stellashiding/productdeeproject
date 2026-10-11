@@ -11,6 +11,8 @@ if(await page.locator('.garden-experience').getAttribute('data-entry')!=='enteri
 await page.waitForTimeout(1100);await page.screenshot({path:'screenshots/deeproject-garden-transition.png',fullPage:true});
 await page.waitForFunction(()=>document.querySelector('.garden-experience').dataset.entry==='ready');
 if(!await page.locator('#garden-workspace').isVisible())throw Error('Entry did not reveal workspace');
+await page.locator('#garden-interior-canvas').scrollIntoViewIfNeeded();await page.waitForFunction(()=>Number(document.querySelector('#garden-interior-canvas').dataset.frames)>1);
+if(await page.locator('[data-3d-plant]').count()!==3)throw Error('3D plant selectors missing');
 if(!await page.locator('#garden-first-hint').isVisible())throw Error('First interaction hint missing');
 if(await page.locator('#garden-settings').getAttribute('open')!==null)throw Error('Customization should start collapsed');
 if(await page.locator('#garden-advanced').getAttribute('open')!==null)throw Error('Advanced options should start collapsed');
@@ -26,6 +28,7 @@ await page.waitForFunction(()=>document.querySelector('#intro-play').textContent
 await page.waitForFunction(()=>Number(document.querySelector('#garden-timeline').value)>1);
 await page.click('#intro-play');
 await page.screenshot({path:'screenshots/deeproject-garden-initial.png',fullPage:true});
+await page.setViewportSize({width:390,height:844});await page.locator('#garden-interior-canvas').scrollIntoViewIfNeeded();await page.waitForTimeout(200);await page.screenshot({path:'screenshots/deeproject-garden-spatial-mobile.png',fullPage:true});await page.setViewportSize({width:1440,height:1100});
 if(await page.evaluate(()=>Boolean(window.__gardenAudio)))throw Error('Audio initialized before opt-in');
 await page.click('#garden-sound');
 await page.waitForFunction(()=>document.querySelector('#garden-sound').getAttribute('aria-pressed')==='true');
@@ -61,7 +64,7 @@ if(await page.locator('[data-priority-rule="context"]').inputValue()!==earlier)t
 await page.selectOption('#garden-perspective','teacher');
 await page.check('#garden-compare');
 if(await page.locator('#garden-comparison tbody tr').count()!==3)throw Error('Stakeholder comparison missing');
-await page.locator('[data-specimen="context"]').click();
+await page.locator('[data-3d-plant="context"]').click();
 if(await page.locator('#garden-first-hint').isVisible())throw Error('Hint stayed after plant selection');
 await page.locator('.lens-criterion-editor summary').click();
 await page.fill('#garden-lens-criterion','Separate source evidence from interpretation');
@@ -104,6 +107,7 @@ if(!await page.locator('[data-specimen="context"] .new-shoot').count())throw Err
 if(!await page.locator('[data-specimen="context"] .scar').count())throw Error('Earlier damage trace missing');
 if(await page.inputValue('#garden-timeline')!=='19')throw Error('Repair replay failed');
 if(!await page.locator('#garden-events').textContent().then(t=>t.includes('7 turns')&&t.includes('Turn 19')))throw Error('Recovery event summary incorrect');
+await page.locator('#garden-interior-canvas').scrollIntoViewIfNeeded();await page.waitForFunction(()=>document.querySelector('#garden-interior-canvas').dataset.turn==='19'&&JSON.parse(document.querySelector('#garden-interior-canvas').dataset.states).context==='recovered');
 if(await page.locator('.garden-plant.issue.revealed').count()===0)throw Error('Earlier failures erased');
 await page.locator('#garden-timeline').evaluate(el=>{el.value='17';el.dispatchEvent(new Event('input',{bubbles:true}))});
 await page.selectOption('#garden-custom','explore');
