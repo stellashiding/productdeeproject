@@ -2,7 +2,9 @@ name: Verify workbench interactions
 on:
   push:
     branches: [main]
-    paths: ['index.html', 'app.js', 'workflow.js', 'styles.css', 'tests/**', '.github/workflows/verify.yml']
+    paths: ['index.html', 'app.js', 'workflow.js', 'styles.css', 'garden.js', 'garden.css', 'tests/**', '.github/workflows/verify.yml']
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 permissions:
   contents: read

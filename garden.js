@@ -1,0 +1,65 @@
+/* A deterministic illustrative trajectory. No model calls or inferred scores. */
+window.interactionGarden = (() => {
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  const escape = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  let frame=1,timer=null,observer=null,visible=false,userPaused=false,selected=0;
+  let rules=['accuracy','context','rhythm'];
+  const definitions={accuracy:{name:'Accuracy',rule:'Generated code executes and uses valid API calls.'},context:{name:'Context alignment',rule:'Retain the requirements stated earlier in the conversation.'},rhythm:{name:'Preserve my rhythm',rule:'Keep the original beat timing unchanged.'},explore:{name:'Explore new rhythms',rule:'Try a new beat pattern while retaining the requested duration.'},privacy:{name:'Privacy',rule:'Do not transmit private files to an external service.'},consistency:{name:'Consistency',rule:'Keep guidance coherent across turns.'}};
+  function state(rule,t){
+    if(rule==='privacy')return 'unknown';
+    if(rule==='accuracy')return t===9?'issue':'pass';
+    if(rule==='context'||rule==='rhythm')return t>=12&&t<=18?'issue':t>=19?'recovered':'pass';
+    if(rule==='consistency')return t>=13&&t<=18?'issue':t>=19?'recovered':'pass';
+    return 'pass';
+  }
+  const statuses={pass:'Meets criterion',issue:'Issue found',unknown:'Not assessed',recovered:'Meets criterion after repair'};
+  function evidence(rule,t){
+    const status=state(rule,t);
+    if(rule==='privacy')return ['Privacy was not assessed.','This fixture contains no network or file-access evidence. Absence of a detected problem is not proof of privacy.'];
+    if(rule==='accuracy'&&t===9)return ['API error in the proposed code.','AI used an unsupported function at Turn 9. The illustrative execution check fails; a revised call passes at Turn 10.'];
+    if(status==='issue')return ['The code runs. The rhythm changed.','User requirement from Turn 2: “Keep my original beat timing.” Turn 12 changes the beat interval from 0.5 to 0.25. The changed interval remains through Turn 18.'];
+    if(status==='recovered')return ['The constraint is restored.','After the user correction at Turn 18, the AI restores the 0.5 beat interval at Turn 19. Later turns retain it. Earlier failures remain on the timeline.'];
+    if(rule==='explore'&&t>=12&&t<=18)return ['A new rhythm meets this selected criterion.','The same changed beat pattern is acceptable under “Explore new rhythms.” This is an alternate evaluation of the fixture, not a claim that the original preservation request was satisfied.'];
+    return ['Behavior meets the selected criterion.','Authored demonstration evidence: valid code and the currently selected requirement are satisfied at this turn. No production evaluation has been run.'];
+  }
+  function plant(rule,t,row){
+    const s=state(rule,t),x=155+(t-1)*27,y=145+row*100,h=18+(t*7+row*5)%20;
+    return `<g class="garden-plant ${s}" data-plant="${rule}:${t}" role="button" tabindex="${t<=frame?0:-1}" aria-label="Turn ${t}, ${definitions[rule].name}: ${statuses[s]}" transform="translate(${x} ${y})"><title>Turn ${t}: ${statuses[s]}</title><ellipse class="root" rx="8" ry="3"/><path class="stem" d="M0 0 Q-3 -12 0 -${h}"/><path class="leaf" d="M0 -10 Q-14 -24 -11 -10 Q-5 -6 0 -10 M0 -17 Q13 -30 11 -17 Q5 -12 0 -17"/><g transform="translate(0 -${h})"><path class="petal" d="M0 0 C-13 -1 -12 -12 -5 -9 C-7 -19 7 -19 5 -9 C12 -12 13 -1 0 0Z"/><circle class="bud" r="4"/><text class="plant-mark" y="-8" text-anchor="middle">${s==='issue'?'!':s==='unknown'?'?':s==='recovered'?'↗':''}</text></g></g>`;
+  }
+  function markup(){return `<section class="agent-experience garden-experience" aria-label="Interactive behavior garden"><div class="garden-top"><span><i class="green-dot"></i> INTERACTION GARDEN</span><span>24 TURNS · ILLUSTRATIVE EXAMPLE</span></div><div class="garden-config"><span class="garden-label">YOUR BEHAVIOR STANDARDS</span><div id="garden-rules"></div><label class="garden-add">Add behavior <select id="garden-add" aria-label="Add behavior"><option value="">Choose a criterion</option>${Object.entries(definitions).map(([k,v])=>`<option value="${k}">${v.name}</option>`).join('')}</select></label><label class="garden-custom">Custom criterion <select id="garden-custom"><option value="rhythm">Preserve my rhythm</option><option value="explore">Explore new rhythms</option></select></label></div><div class="garden-layout"><div class="garden-stage" id="garden-stage"><div class="garden-atmosphere"></div><div class="garden-caption"><span id="garden-chapter">01 / DEFINE</span><h2 id="garden-headline">Your standards. Your garden.</h2><p id="garden-subtitle">Follow behavior across an entire interaction.</p></div><div class="garden-world" id="garden-world"></div><div class="garden-legend"><span>✿ Meets criterion</span><span>! Issue</span><span>? Not assessed</span><span>↗ Recovered</span></div></div><aside class="garden-evidence"><span class="garden-label">THE EVIDENCE BEHIND THE GROWTH</span><div class="garden-turn">Turn <strong id="garden-turn">01</strong><span>/ 24</span></div><span class="garden-label" id="garden-dimension"></span><h3 id="garden-evidence-title"></h3><p id="garden-evidence-text"></p><div class="garden-rule" id="garden-rule"></div><div class="garden-verdict" id="garden-verdict"></div><button id="garden-repair" class="btn">Replay the correction ↗</button><a href="#harness" class="garden-workbench">Define your own rubric ↗</a><small>Authored fixtures. Changing criteria re-evaluates this example only. No live model or automated repair.</small></aside></div><div class="garden-controls"><button id="intro-play" class="btn primary">▷ Play story</button><label class="garden-scrubber">Interaction timeline<input id="garden-timeline" type="range" min="1" max="24" value="1" aria-label="Interaction turn"></label><output id="garden-position">01 / 24</output><button id="intro-reset" class="btn">↶ Restart</button></div></section>`;}
+  function world(){
+    const height=200+rules.length*100;
+    document.querySelector('#garden-world').innerHTML=`<svg viewBox="0 0 840 ${height}" role="group" aria-label="Behavior criteria across 24 interaction turns"><defs><linearGradient id="garden-bed" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#243d32"/><stop offset="1" stop-color="#0e201b"/></linearGradient><filter id="garden-glow"><feGaussianBlur stdDeviation="2"/></filter></defs>${rules.map((rule,row)=>`<g><rect class="garden-bed" x="128" y="${105+row*100}" width="680" height="63" rx="30"/><text class="garden-row-label" x="14" y="${136+row*100}">${escape(definitions[rule].name)}</text>${Array.from({length:24},(_,i)=>plant(rule,i+1,row)).join('')}${['context','rhythm','consistency'].includes(rule)?`<path class="garden-history" d="M452 ${155+row*100} H641"/><path class="garden-recovery" d="M641 ${155+row*100} Q657 ${172+row*100} 668 ${155+row*100}"/>`:''}</g>`).join('')}<line class="garden-time-line" x1="155" y1="${height-70}" x2="776" y2="${height-70}"/>${[1,6,12,18,24].map(t=>`<text class="garden-tick" x="${155+(t-1)*27}" y="${height-45}" text-anchor="middle">${t===1?'TURN ':''}${t}</text>`).join('')}<line id="garden-cursor" y1="80" y2="${height-70}"/></svg>`;
+    document.querySelector('#garden-rules').innerHTML=rules.map(k=>`<button data-remove="${k}" title="Remove ${escape(definitions[k].name)}" aria-label="Remove ${escape(definitions[k].name)}">${escape(definitions[k].name)} <span>×</span></button>`).join('');
+    document.querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>{if(rules.length===1)return;rules=rules.filter(k=>k!==b.dataset.remove);selected=0;world();paint()});
+    document.querySelectorAll('[data-plant]').forEach(n=>{const inspect=()=>{const [rule,t]=n.dataset.plant.split(':');if(+t>frame)return;pause(true);selected=rules.indexOf(rule);detail(rule,+t)};n.onclick=inspect;n.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();inspect()}}});
+  }
+  function detail(rule,t){const [title,text]=evidence(rule,t),s=state(rule,t);document.querySelector('#garden-dimension').textContent=definitions[rule].name+' · Turn '+t;document.querySelector('#garden-evidence-title').textContent=title;document.querySelector('#garden-evidence-text').textContent=text;document.querySelector('#garden-rule').textContent='Criterion: '+definitions[rule].rule;document.querySelector('#garden-verdict').textContent=statuses[s];document.querySelector('#garden-verdict').dataset.status=s;document.querySelector('#garden-repair').hidden=s!=='issue';}
+  function paint(){
+    document.querySelector('#garden-turn').textContent=String(frame).padStart(2,'0');document.querySelector('#garden-position').textContent=String(frame).padStart(2,'0')+' / 24';document.querySelector('#garden-timeline').value=frame;
+    const chapter=frame<4?['01 / DEFINE','Your standards. Your garden.','Choose the behaviors that matter in your domain.']:frame<12?['02 / UNFOLD','Every turn leaves a trace.','Useful behavior and errors can coexist.']:frame<19?['03 / REVEAL','“Done” is not enough.','The code runs. A requirement was lost along the way.']:['04 / RECOVER','Repair changes the next turn.','New growth. Earlier evidence stays visible.'];
+    ['chapter','headline','subtitle'].forEach((k,i)=>document.querySelector('#garden-'+k).textContent=chapter[i]);
+    document.querySelector('#garden-stage').dataset.chapter=frame<12?'growth':frame<19?'issue':'recovery';
+    document.querySelectorAll('[data-plant]').forEach(n=>{const t=+n.dataset.plant.split(':')[1];n.classList.toggle('revealed',t<=frame);n.classList.toggle('current',t===frame);n.setAttribute('tabindex',t<=frame?'0':'-1');n.setAttribute('aria-hidden',String(t>frame))});
+    const cursor=document.querySelector('#garden-cursor');cursor.setAttribute('x1',155+(frame-1)*27);cursor.setAttribute('x2',155+(frame-1)*27);
+    document.querySelector('#garden-world').style.setProperty('--camera-scale',frame>=12&&frame<=18?'1.04':'1');
+    document.querySelectorAll('.garden-history').forEach((n,i)=>{const row=rules.indexOf(n.parentNode.querySelector('[data-plant]').dataset.plant.split(':')[0]);n.setAttribute('d',`M452 ${155+row*100} H${155+(Math.min(frame,18)-1)*27}`);n.style.opacity=frame>=12?'1':'0'});document.querySelectorAll('.garden-recovery').forEach(n=>n.style.opacity=frame>=19?'1':'0');
+    detail(rules[Math.min(selected,rules.length-1)],frame);
+  }
+  function pause(explicit=false){clearTimeout(timer);timer=null;if(explicit)userPaused=true;document.querySelector('#intro-play')?.replaceChildren(document.createTextNode('▷ Play story'));document.querySelector('#garden-stage')?.classList.remove('playing');}
+  function play(){if(!visible||document.hidden||userPaused||timer)return;document.querySelector('#intro-play').textContent='Ⅱ Pause story';document.querySelector('#garden-stage').classList.add('playing');timer=setTimeout(()=>{timer=null;frame=frame===24?1:frame+1;paint();play()},frame===24?3500:frame===17||frame===19?1800:850);}
+  function visibility(){if(document.hidden)pause();else play()}
+  function motion(){if(reduced.matches)pause(true)}
+  function mount(){frame=1;selected=0;rules=['accuracy','context','rhythm'];userPaused=reduced.matches;world();paint();const el=document.querySelector('.garden-experience');observer=new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;if(visible)play();else pause()},{threshold:.15});observer.observe(el);
+    document.querySelector('#intro-play').onclick=()=>{if(timer)pause(true);else{userPaused=false;play()}};
+    document.querySelector('#intro-reset').onclick=()=>{pause();frame=1;paint();userPaused=reduced.matches;play()};
+    document.querySelector('#garden-timeline').oninput=e=>{pause(true);frame=+e.target.value;paint()};
+    document.querySelector('#garden-add').onchange=e=>{if(e.target.value&&!rules.includes(e.target.value)){rules.push(e.target.value);world();paint()}e.target.value=''};
+    document.querySelector('#garden-custom').onchange=e=>{pause(true);rules=rules.filter(k=>k!=='rhythm'&&k!=='explore');rules.push(e.target.value);selected=rules.length-1;world();paint()};
+    document.querySelector('#garden-repair').onclick=()=>{pause(true);frame=frame===9?10:19;paint()};
+    document.querySelector('#watch-run').onclick=()=>{el.scrollIntoView({behavior:reduced.matches?'auto':'smooth',block:'start'});userPaused=false;visible=true;play()};
+    document.addEventListener('visibilitychange',visibility);reduced.addEventListener('change',motion);
+  }
+  function dispose(){pause();observer?.disconnect();observer=null;visible=false;document.removeEventListener('visibilitychange',visibility);reduced.removeEventListener('change',motion)}
+  return {markup,mount,dispose};
+})();
