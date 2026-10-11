@@ -1,6 +1,10 @@
 const {chromium}=require('playwright');
 (async()=>{require('fs').mkdirSync('screenshots',{recursive:true});const browser=await chromium.launch({headless:true,args:['--no-sandbox']});const page=await browser.newPage({viewport:{width:1440,height:1100}});const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('http://localhost:8027');await page.waitForSelector('#intro-play');
 await page.locator('.garden-experience').scrollIntoViewIfNeeded();
+if(await page.locator('[data-specimen]').count()!==3)throw Error('Individual specimens missing');
+if(!await page.locator('[data-specimen="context"] .wood').count())throw Error('Context tree missing');
+if(!await page.locator('[data-specimen="accuracy"] .fern-leaf').count())throw Error('Accuracy fern missing');
+
 await page.waitForFunction(()=>document.querySelector('#intro-play').textContent.includes('Pause'));
 await page.waitForFunction(()=>Number(document.querySelector('#garden-timeline').value)>1);
 await page.click('#intro-play');
@@ -12,6 +16,8 @@ await page.locator('#garden-timeline').evaluate(el=>{el.value='17';el.dispatchEv
 await page.locator('[data-plant="rhythm:17"]').click();
 if(!await page.locator('#garden-evidence-title').textContent().then(t=>t.includes('rhythm changed')))throw Error('Evidence missing');
 await page.click('#garden-repair');
+if(!await page.locator('[data-specimen="rhythm"] .new-shoot').count())throw Error('Recovery growth missing');
+if(!await page.locator('[data-specimen="rhythm"] .scar').count())throw Error('Earlier damage trace missing');
 if(await page.inputValue('#garden-timeline')!=='19')throw Error('Repair replay failed');
 if(await page.locator('.garden-plant.issue.revealed').count()===0)throw Error('Earlier failures erased');
 await page.locator('#garden-timeline').evaluate(el=>{el.value='17';el.dispatchEvent(new Event('input',{bubbles:true}))});
