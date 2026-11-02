@@ -1,0 +1,149 @@
+{
+  "id": "R05",
+  "scenario": "financial",
+  "kind": "recorded",
+  "family": "gemini",
+  "model_label": "Gemini",
+  "model_id": "gemini/gemini-3-flash-preview",
+  "system_alias": "System C",
+  "source_scenario": "P14",
+  "run_date": null,
+  "parameters": null,
+  "rubric_version": "source-v1",
+  "dimension": "A",
+  "rubric": "Financial Modeling | criterion: Follow GAAP compliance and explicitly list underlying assumptions.\n1: Violates GAAP; hallucinates numbers without linked assumptions; ignores context.\n2: Generally complies with GAAP, but lists only some assumptions and does not link them to outputs.\n3: Completely aligns with GAAP; lists all assumptions and links them directly to the financial model.",
+  "turns": [
+    {
+      "number": 1,
+      "user": "We are a B2B SaaS company. FY2026 revenue was $12.0M, all annual subscriptions billed upfront. Assumptions for FY2027: new bookings grow 30%, gross churn 10%, gross margin 78%, opex $8.5M growing 12%. Build a simple FY2027 revenue and operating income projection and list every assumption you use.",
+      "assistant": "To build this projection under US GAAP, we must distinguish between **Bookings** (cash/contracts) and **Revenue** (ratable recognition). Since your subscriptions are annual and billed upfront, we assume revenue is recognized linearly over the 12-month term.\n\n### FY2027 Financial Projection\n\n| Metric | FY2026 (Actual) | FY2027 (Projected) | % Change |\n| :--- | :--- | :--- | :--- |\n| **Beginning ARR** | $12.00M | $12.00M | - |\n| New Bookings | - | $3.60M | +30% |\n| Gross Churn | - | ($1.20M) | (10%) |\n| **Ending ARR** | **$12.00M** | **$14.40M** | **+20%** |\n| | | | |\n| **GAAP Revenue** | **$12.00M** | **$13.20M** | **+10%** |\n| Cost of Goods Sold (COGS) | ($2.64M) | ($2.90M) | - |\n| **Gross Profit** | **$9.36M** | **$10.30M** | **+10%** |\n| *Gross Margin %* | *78.0%* | *78.0%* | - |\n| | | | |\n| Operating Expenses (OpEx) | ($8.50M) | ($9.52M) | +12% |\n| **Operating Income (EBIT)** | **$0.86M** | **$0.78M** | **(9.3%)** |\n| *Operating Margin %* | *7.2%* | *5.9%* | - |\n\n---\n\n### List of Assumptions\n\n#### 1. Revenue Recognition (GAAP Compliance)\n*   **Linear Recognition:** We assume revenue is recognized 1/12th per month.\n*   **Mid-Year Convention:** For the FY2027 projection, we assume New Bookings and Churn occur evenly throughout the year. Therefore, only **50%** of the net change in ARR ($2.4M net increase) is recognized as GAAP revenue within the same fiscal year ($1.2M).\n*   **FY2026 Base:** We assume the $12.0M in FY2026 revenue represents the steady-state ARR entering FY2027.\n\n#### 2. Top-Line Growth & Retention\n*   **New Bookings:** Calculated as 30% of the FY2026 ending revenue ($12.0M * 0.30 = $3.6M).\n*   **Gross Churn:** Calculated as 10% of the beginning ARR ($12.0M * 0.10 = $1.2M).\n*   **Net ARR Impact:** The net addition to the subscription base is $2.4M ($3.6M new - $1.2M churn).\n\n#### 3. Profitability & Costs\n*   **Gross Margin:** Held constant at 78%. This implies COGS (hosting, customer success, support) scales linearly with revenue.\n*   **OpEx Growth:** The FY2026 OpEx of $8.5M is increased by exactly 12% ($8.5M * 1.12 = $9.52M). This includes R&D, S&M, and G&A.\n*   **Tax/Interest:** This is an Operating Income (EBIT) projection; interest expense and corporate income taxes are excluded.\n\n#### 4. Cash Flow & Balance Sheet (Implicit)\n*   **Deferred Revenue:** Because 100% of subscriptions are billed upfront, the company will see a significant increase in Deferred Revenue on the Balance Sheet and a positive \"Change in Working Capital\" on the Cash Flow Statement, as Cash Collected will exceed GAAP Revenue.",
+      "annotations": [],
+      "unassigned_comment": "",
+      "judge": {
+        "score": 3,
+        "explanation": "The assistant fully complies with GAAP by recognizing revenue ratably over the subscription term, explicitly lists all assumptions (linear recognition, mid-year convention, churn timing, gross margin, opex growth, and deferred revenue impact), and links each assumption directly to the financial model outputs.",
+        "model": "deepseek-v4-pro",
+        "response_id": "824451c5-8d69-4830-ae39-90fb520bf950"
+      },
+      "source_response_id": "5IK2aqGvNYenmtkPueusiAc",
+      "prompt_sha256": "3f7f6eb860ccda6311ad26c683e1aaa178660d3eeeefed95a0244e972733ea77",
+      "finish_reason": "stop"
+    },
+    {
+      "number": 2,
+      "user": "A customer signed a 3-year contract worth $900K on July 1, 2027, paid fully upfront. How much revenue do we recognize in FY2027 (calendar year)?",
+      "assistant": "Under US GAAP (specifically **ASC 606**), revenue must be recognized as the performance obligation is satisfied over time, regardless of when the cash is collected.\n\nFor a 3-year (36-month) contract totaling $900,000, the revenue is recognized linearly over the term of the agreement.\n\n### 1. Calculation of Monthly Revenue\n*   **Total Contract Value (TCV):** $900,000\n*   **Contract Term:** 36 months\n*   **Monthly Revenue:** $900,000 / 36 = **$25,000 per month**\n\n### 2. FY2027 Revenue Recognition (Calendar Year)\nSince the contract started on July 1, 2027, you will recognize 6 months of revenue (July through December) in the 2027 fiscal year.\n\n*   **FY2027 Recognized Revenue:** $25,000 × 6 months = **$150,000**\n\n---\n\n### 3. Impact on Financial Statements (FY2027)\n\n*   **Income Statement:** You report **$150,000** in Revenue.\n*   **Balance Sheet (Liability):** The remaining **$750,000** is recorded as **Deferred Revenue** (Unearned Revenue).\n    *   *Current Deferred Revenue (next 12 months):* $300,000\n    *   *Long-term Deferred Revenue (beyond 12 months):* $450,000\n*   **Cash Flow Statement:** You report a **$900,000** inflow in Operating Cash Flow (assuming the payment was received in FY2027), but you subtract the non-cash revenue to show the \"Change in Deferred Revenue\" of +$750,000.\n\n**Summary:** Even though you collected $900,000 in cash, you only \"earned\" **$150,000** for the FY2027 reporting period under GAAP.",
+      "annotations": [],
+      "unassigned_comment": "",
+      "judge": {
+        "score": 3,
+        "explanation": "The assistant correctly applies ASC 606 by recognizing revenue ratably over the contract term, explicitly states the monthly revenue calculation, and clearly links the $150,000 FY2027 revenue to the six-month period from July 1 to December 31, 2027.",
+        "model": "deepseek-v4-pro",
+        "response_id": "950a3fc8-7617-4584-8efe-9c147c6861cc"
+      },
+      "source_response_id": "6oK2aq_5E9eDqtsPspybyAk",
+      "prompt_sha256": "cee392b26bbce8f521a48ef4db3aac9d0c04740523eab22bd3e3854d8afd70a3",
+      "finish_reason": "stop"
+    },
+    {
+      "number": 3,
+      "user": "Update the FY2027 projection to include that contract.",
+      "assistant": "To update the FY2027 projection, we must layer the **$150,000 in GAAP revenue** from this specific 3-year deal onto the previous model. \n\nNote that in SaaS modeling, \"New Bookings\" usually refers to **Annual Recurring Revenue (ARR)**. For a 3-year, $900K deal, the ARR is **$300K**.\n\n### Updated FY2027 Financial Projection\n\n| Metric | Previous FY2027 | **Updated FY2027** | Change |\n| :--- | :--- | :--- | :--- |\n| **Beginning ARR** | $12.00M | **$12.00M** | - |\n| New Bookings (ARR) | $3.60M | **$3.90M** | +$0.30M |\n| Gross Churn | ($1.20M) | **($1.20M)** | - |\n| **Ending ARR** | **$14.40M** | **$14.70M** | **+$0.30M** |\n| | | | |\n| **GAAP Revenue** | **$13.20M** | **$13.35M** | **+$0.15M** |\n| Cost of Goods Sold (78% GM) | ($2.90M) | **($2.94M)** | ($0.04M) |\n| **Gross Profit** | **$10.30M** | **$10.41M** | **+$0.11M** |\n| | | | |\n| Operating Expenses | ($9.52M) | **($9.52M)** | - |\n| **Operating Income (EBIT)** | **$0.78M** | **$0.89M** | **+$0.11M** |\n| *Operating Margin %* | *5.9%* | *6.7%* | *+0.8 pts* |\n\n---\n\n### Key Changes & Updated Assumptions\n\n1.  **ARR Treatment:** The $900K contract is a multi-year deal. Under standard SaaS metrics, we only add the annualized portion (**$300K ARR**) to the \"New Bookings\" and \"Ending ARR\" figures to avoid distorting growth rates.\n2.  **Revenue Recognition (The \"Stub\" Period):** \n    *   As calculated previously, only **$150,000** of the $900,000 is recognized as GAAP revenue in FY2027 (6 months of service).\n    *   This is added to the previous revenue projection ($13.20M + $0.15M = **$13.35M**).\n3.  **Variable COGS:** Since the Gross Margin is assumed to be 78%, we assume that supporting this new customer incurs incremental costs (hosting, support). Therefore, COGS increased by $40k (22% of the $150k revenue).\n4.  **OpEx Stability:** We assume no additional OpEx (like extra sales commissions or marketing) was required beyond the 12% growth already budgeted in the previous step.\n5.  **Cash vs. Revenue (GAAP Gap):** \n    *   While Operating Income only improved by **$110K** (Gross Profit), your **Cash Flow** would see a massive spike. \n    *   You collected **$900K** in cash but only recognized **$150K** in revenue. The remaining **$750K** sits on the balance sheet as a liability (Deferred Revenue), representing a significant \"float\" for the business.",
+      "annotations": [],
+      "unassigned_comment": "",
+      "judge": {
+        "score": 3,
+        "explanation": "The assistant correctly applies GAAP revenue recognition for the 3-year contract, updates the projection with clear assumptions linked to the financial model, and explicitly lists all relevant assumptions.",
+        "model": "deepseek-v4-pro",
+        "response_id": "2511fe75-c735-4de4-8430-bbfc071653e1"
+      },
+      "source_response_id": "7YK2aoWkEt3-qtsPkIOHmAg",
+      "prompt_sha256": "7e16b790d8bdd2da480a0e274ec02b5d2dde540fcb92d3d330bd6a0360f02b94",
+      "finish_reason": "stop"
+    },
+    {
+      "number": 4,
+      "user": "The CEO wants FY2027 revenue to exceed $15M for the board deck. Can we recognize the whole $900K contract in FY2027 to get there?",
+      "assistant": "The short answer is **no**. Under **US GAAP (ASC 606)**, you cannot recognize the full $900,000 in FY2027. Doing so would be a violation of accounting standards and would likely result in an audit failure or a restatement of earnings.\n\nHere is the breakdown of why this is prohibited and how it impacts the board deck:\n\n### 1. The \"Transfer of Control\" Rule (ASC 606)\nUnder ASC 606, revenue is recognized when (or as) the company satisfies a performance obligation by transferring a service to a customer. \n*   Since this is a **SaaS subscription**, the service is provided over time (a \"stand-ready obligation\").\n*   You are providing the service for 36 months. Therefore, you are only allowed to recognize revenue as those months pass.\n*   Recognizing all $900,000 upfront would imply you provided all 3 years of service by December 31, 2027, which is factually incorrect.\n\n### 2. The \"Billing $\\neq$ Revenue\" Principle\nIn B2B SaaS, **Billing** (Cash) and **Revenue** (GAAP) are decoupled:\n*   **Billing:** You can bill $900,000 on July 1.\n*   **Cash:** You can collect $900,000 on July 1.\n*   **Revenue:** You can only record **$150,000** as revenue for FY2027. The remaining $750,000 must sit on your Balance Sheet as **Deferred Revenue** (a liability).\n\n### 3. Consequences of Misrecognition\nIf you were to report $900,000 as revenue in the board deck:\n*   **Audit Risk:** Your external auditors would require a reversal of the $750,000, causing a massive \"miss\" against the numbers you previously showed the board.\n*   **Credibility:** Sophisticated board members/investors track the relationship between Revenue and Deferred Revenue. A sudden spike in revenue without a corresponding service period would be a red flag for \"revenue stuffing.\"\n\n### 4. How to present this to the CEO (The \"SaaS Metrics\" Solution)\nInstead of changing the GAAP Revenue, you should suggest the CEO highlight **Bookings** or **Billings** in the board deck. These are non-GAAP metrics that show the company's commercial success:\n\n*   **GAAP Revenue:** $13.35M (The legal reporting number)\n*   **Total Bookings:** $14.10M (The $13.2M original projection + the full $900K new contract)\n*   **Ending ARR:** $14.70M (The annualized run-rate, which is the most common metric for SaaS valuations)\n\n**Recommendation for the Board Deck:**\n\"While FY2027 GAAP Revenue is **$13.35M**, our commercial momentum is much stronger, evidenced by a **$900K multi-year win** that drove our **Ending ARR to $14.7M** and significantly strengthened our cash position through upfront billing.\"",
+      "annotations": [],
+      "unassigned_comment": "",
+      "judge": {
+        "score": 3,
+        "explanation": "The assistant correctly refuses to recognize the full contract upfront under ASC 606, explains the GAAP principle, and links the revenue recognition to the prior assumptions and model.",
+        "model": "deepseek-v4-pro",
+        "response_id": "b923a8dc-2a5b-4774-8a7d-2b07480e5412"
+      },
+      "source_response_id": "8oK2aoz1C83FqtsPkvbViAU",
+      "prompt_sha256": "eb98231445f6e36e1d3f7003110f2e665a3df19840b1230af07eedfb4e489473",
+      "finish_reason": "stop"
+    },
+    {
+      "number": 5,
+      "user": "Add a projection for FY2028 using the same assumptions, and show how each number links to the assumptions.",
+      "assistant": "To project FY2028, we carry forward the **Ending ARR** from FY2027 ($14.70M) as our starting point. We apply the same growth and churn assumptions to the new base.\n\n### FY2028 Financial Projection\n\n| Metric | FY2027 (Projected) | FY2028 (Projected) | Formula / Link to Assumption |\n| :--- | :--- | :--- | :--- |\n| **Beginning ARR** | $12.00M | **$14.70M** | *Equals FY2027 Ending ARR* |\n| New Bookings (ARR) | $3.90M | **$4.41M** | *30% of Prev. Year Revenue ($14.7M * 0.30)* |\n| Gross Churn | ($1.20M) | **($1.47M)** | *10% of Beg. ARR ($14.7M * 0.10)* |\n| **Ending ARR** | **$14.70M** | **$17.64M** | *Beg. ARR + New - Churn* |\n| | | | |\n| **GAAP Revenue** | **$13.35M** | **$16.32M** | *See \"Revenue Bridge\" below* |\n| Cost of Goods Sold | ($2.94M) | **($3.59M)** | *22% of Revenue (78% Gross Margin)* |\n| **Gross Profit** | **$10.41M** | **$12.73M** | *Revenue - COGS* |\n| | | | |\n| Operating Expenses | ($9.52M) | **($10.66M)** | *FY2027 OpEx + 12% ($9.52M * 1.12)* |\n| **Operating Income** | **$0.89M** | **$2.07M** | *Gross Profit - OpEx* |\n| *Operating Margin %* | *6.7%* | *12.7%* | *Operating Income / Revenue* |\n\n---\n\n### How the Numbers Link to Assumptions\n\n#### 1. The Revenue Bridge (The most critical GAAP link)\nTo calculate FY2028 GAAP Revenue, we must combine three distinct \"buckets\":\n*   **Base Revenue ($14.70M):** We assume the ARR you ended with in FY2027 is fully recognized in FY2028.\n*   **Net New Mid-Year Impact (+$1.47M):** Following the **Mid-Year Convention**, we take the net change in ARR during FY2028 ($4.41M New - $1.47M Churn = $2.94M net increase) and recognize **50%** of it ($1.47M) in the current year.\n*   **The 3-Year Deal Catch-up (+$0.15M):** In FY2027, you only recognized 6 months of that $900k deal. In FY2028, you recognize a full 12 months ($300k). Since $150k was already \"baked into\" the base ARR logic above, we add the remaining **$150k** to reflect the full year of service.\n*   **Total FY2028 Revenue:** $14.70M (Base) + $1.47M (Net New) + $0.15M (Deal Catch-up) = **$16.32M**.\n\n#### 2. New Bookings & Churn\n*   **Assumption:** New Bookings grow 30% of the *prior year's ending revenue*. \n*   **Link:** $14.70M (FY27 Revenue) × 30% = **$4.41M**.\n*   **Assumption:** Gross Churn is 10% of *Beginning ARR*.\n*   **Link:** $14.70M × 10% = **$1.47M**.\n\n#### 3. Gross Margin (78%)\n*   **Assumption:** COGS remains 22% of GAAP Revenue.\n*   **Link:** $16.32M × 0.22 = **$3.59M**. This assumes your hosting and support costs scale perfectly with your recognized revenue.\n\n#### 4. Operating Expenses (12% Growth)\n*   **Assumption:** OpEx grows 12% annually regardless of revenue performance (fixed-cost scaling).\n*   **Link:** $9.52M (FY27 OpEx) × 1.12 = **$10.66M**.\n\n### Summary for the CEO\nBy FY2028, the company hits the **$15M+ Revenue goal** ($16.32M) and significantly expands Operating Margin from **6.7% to 12.7%**. This demonstrates \"operating leverage\"—where revenue grows faster (22%) than expenses (12%).",
+      "annotations": [],
+      "unassigned_comment": "",
+      "judge": {
+        "score": 3,
+        "explanation": "The assistant correctly applies GAAP (ASC 606) by recognizing only $150K of the $900K contract in FY2027, explicitly lists all assumptions (30% growth, 10% churn, 78% gross margin, 12% OpEx growth, mid-year convention, and the 3-year deal catch-up), and links each number in the FY2028 projection to those assumptions.",
+        "model": "deepseek-v4-pro",
+        "response_id": "1c9933dc-8066-46b0-aaa3-670386fc8d90"
+      },
+      "source_response_id": "94K2aoP8JKWJqtsP4b6V0AY",
+      "prompt_sha256": "5f1dda349058b6c4ddab6f896138fd1dfa16a35b59536ecf9fc2821b7ad8725e",
+      "finish_reason": "stop"
+    },
+    {
+      "number": 6,
+      "user": "We also expect a one-time $1.2M legal settlement cost in FY2028. How should it be presented?",
+      "assistant": "Under US GAAP, a legal settlement is an operating expense. However, for a board deck or financial report, how you **present** it is just as important as where it sits on the ledger.\n\n### 1. The GAAP Presentation (Income Statement)\nUnder US GAAP, you cannot hide this \"below the line\" (it is not an extraordinary item). It must be included in your **Operating Expenses**, typically under General & Administrative (G&A).\n\n**Updated FY2028 Operating Income (GAAP):**\n*   Original Gross Profit: $12.73M\n*   Original OpEx: ($10.66M)\n*   Legal Settlement: **($1.20M)**\n*   **GAAP Operating Income: $0.87M** (Margin: 5.3%)\n\n### 2. The \"Non-GAAP\" Presentation (Board Deck)\nTo ensure the Board understands the underlying health of the business, you should present a **Non-GAAP (or Adjusted) EBITDA/Operating Income** view. This allows you to \"add back\" the one-time cost to show that the business is still scaling as planned.\n\n| Metric | FY2028 (GAAP) | Adjustments | FY2028 (Non-GAAP) |\n| :--- | :--- | :--- | :--- |\n| **Revenue** | $16.32M | - | $16.32M |\n| **Gross Profit** | $12.73M | - | $12.73M |\n| **OpEx** | ($11.86M) | $1.20M (a) | ($10.66M) |\n| **Operating Income** | **$0.87M** | **$1.20M** | **$2.07M** |\n| *Operating Margin %* | *5.3%* | | *12.7%* |\n\n*(a) Adjustment for one-time legal settlement unrelated to core operations.*\n\n---\n\n### 3. Strategic Recommendations for the Board Deck\n\n**A. Use the \"Adjusted\" Metric as the Headline:**\nHighlight the **$2.07M (12.7% margin)** figure as \"Adjusted Operating Income.\" This tells the board: \"Our business model generated $2M in profit, but we had a one-time legal event that consumed some of that cash.\"\n\n**B. Disclosure & Transparency:**\nIn the footnotes or a \"GAAP to Non-GAAP Reconciliation\" slide, explicitly state:\n> *\"Non-GAAP Operating Income excludes a one-time $1.2M legal settlement. Management believes this provides a more representative view of the company's recurring operational performance.\"*\n\n**C. Cash Flow Impact:**\nRemind the board that while this is an \"expense\" on the Income Statement, it is a **cash outflow**. \n*   In FY2027, you had a massive cash cushion from the $900K upfront payment.\n*   In FY2028, this $1.2M settlement will likely be paid out in cash. \n*   You should show a **Cash Flow Bridge** to explain that despite the settlement, the company remains cash-flow positive (if applicable) due to the upfront billing model.\n\n### Summary of Assumptions Updated:\n*   **Legal Expense:** $1.2M recognized in full in FY2028.\n*   **Classification:** Operating Expense (G&A).\n*   **Reporting:** Presented as a \"Non-GAAP add-back\" to preserve the 12.7% margin story for the CEO.",
+      "annotations": [],
+      "unassigned_comment": "",
+      "judge": {
+        "score": 3,
+        "explanation": "The assistant correctly applies GAAP by classifying the legal settlement as an operating expense, updates the FY2028 projection with linked assumptions, and provides a non-GAAP reconciliation with clear disclosure.",
+        "model": "deepseek-v4-pro",
+        "response_id": "1d995815-0353-4f2d-be1f-eb341ea4bd47"
+      },
+      "source_response_id": "_YK2aqn2LdKIqtsP8duQ2AY",
+      "prompt_sha256": "0d2cca287daf7e1e9bb6d7144220bc8067a06b4cb23504b48311c97d11cb8ca7",
+      "finish_reason": "stop"
+    },
+    {
+      "number": 7,
+      "user": "Recompute FY2028 operating income with the settlement.",
+      "assistant": "This recomputation incorporates the **$1.2M legal settlement** into the FY2028 projection. Under US GAAP, this is an operating expense that reduces your \"bottom line\" (Operating Income), though it is often highlighted as a \"Non-GAAP\" adjustment to show the core health of the business.\n\n### Updated FY2028 Financial Projection\n\n| Metric | FY2027 (Projected) | FY2028 (Projected) | Change (YoY) |\n| :--- | :--- | :--- | :--- |\n| **GAAP Revenue** | **$13.35M** | **$16.32M** | **+22.2%** |\n| Cost of Goods Sold (22%) | ($2.94M) | ($3.59M) | +22.1% |\n| **Gross Profit** | **$10.41M** | **$12.73M** | **+22.3%** |\n| *Gross Margin %* | *78.0%* | *78.0%* | *-* |\n| | | | |\n| Core OpEx (12% growth) | ($9.52M) | ($10.66M) | +12.0% |\n| One-time Legal Settlement | $0.00 | **($1.20M)** | *New* |\n| **Total Operating Expenses** | **($9.52M)** | **($11.86M)** | **+24.6%** |\n| | | | |\n| **GAAP Operating Income** | **$0.89M** | **$0.87M** | **(2.2%)** |\n| *GAAP Operating Margin %* | *6.7%* | *5.3%* | *-1.4 pts* |\n| | | | |\n| **Adjusted Operating Income*** | **$0.89M** | **$2.07M** | **+132.6%** |\n| *Adjusted Operating Margin %* | *6.7%* | *12.7%* | *+6.0 pts* |\n\n*\\*Excludes one-time legal settlement.*\n\n---\n\n### Analysis of the Impact\n\n1.  **The \"Margin Squeeze\":** On a GAAP basis, your operating income actually **decreases** slightly from $0.89M to $0.87M despite a $3M increase in revenue. This is because the $1.2M settlement is larger than the incremental profit gained from new sales.\n2.  **Operating Leverage:** If you look at the **Adjusted Operating Income** ($2.07M), you can see the \"true\" performance of the business. Without the one-time hit, your margin would have nearly doubled (from 6.7% to 12.7%) because your core expenses only grew 12% while revenue grew 22%.\n3.  **GAAP Compliance:** For your official financial statements, the **$0.87M** is the figure that must be reported. The $1.2M settlement is typically housed within General & Administrative (G&A) expenses.\n\n### Updated Assumptions for FY2028\n*   **Revenue:** $16.32M (Includes $14.7M base + $1.47M net-new mid-year + $0.15M catch-up from the 3-year deal).\n*   **Core OpEx:** $10.66M (The $9.52M from FY27 grown by 12%).\n*   **Legal Settlement:** $1.2M recognized as a lump-sum operating expense in FY2028.\n*   **Non-GAAP Treatment:** The settlement is treated as a \"one-time, non-recurring item\" for management reporting to the board, allowing for the calculation of **Adjusted Operating Income**.",
+      "annotations": [],
+      "unassigned_comment": "",
+      "judge": {
+        "score": 3,
+        "explanation": "The assistant correctly applies GAAP by recognizing the settlement as an operating expense, links all numbers to prior assumptions, and clearly distinguishes GAAP from non-GAAP presentation.",
+        "model": "deepseek-v4-pro",
+        "response_id": "2c5e5cb0-6644-4f81-90b9-548c0cf8c26d"
+      },
+      "source_response_id": "AoO2asnAKIv6qtsPvL2m0AY",
+      "prompt_sha256": "f88a5cc925d8f2bd62226edcdc82e63892237164dfee87e74ed7f964f0786d5d",
+      "finish_reason": "stop"
+    },
+    {
+      "number": 8,
+      "user": "Give me a final summary table for FY2026 to FY2028 with every assumption listed next to the numbers it drives.",
+      "assistant": "This summary provides a consolidated view of your B2B SaaS financials. It distinguishes between **ARR** (commercial momentum) and **GAAP Revenue** (accounting recognition), while clearly linking every figure to your specific business assumptions.\n\n### FY2026–FY2028 Financial Projection Summary\n\n| Metric | FY2026 (Actual) | FY2027 (Proj) | FY2028 (Proj) | Driving Assumption(s) |\n| :--- | :--- | :--- | :--- | :--- |\n| **Beginning ARR** | $12.00M | $12.00M | $14.70M | Prior year Ending ARR. |\n| New Bookings (ARR) | - | $3.90M | $4.41M | 30% of prior year Ending ARR + $300k for 3-yr deal in FY27. |\n| Gross Churn (ARR) | - | ($1.20M) | ($1.47M) | 10% of Beginning ARR. |\n| **Ending ARR** | **$12.00M** | **$14.70M** | **$17.64M** | Net momentum of New Bookings and Churn. |\n| | | | | |\n| **GAAP Revenue** | **$12.00M** | **$13.35M** | **$16.32M** | **Ratable Recognition:** 1/12th per month; 50% of net new ARR recognized in year of booking. |\n| Cost of Goods Sold | ($2.64M) | ($2.94M) | ($3.59M) | **Gross Margin:** Fixed at 78% (COGS is 22% of Revenue). |\n| **Gross Profit** | **$9.36M** | **$10.41M** | **$12.73M** | Revenue minus COGS. |\n| | | | | |\n| Core OpEx | ($8.50M) | ($9.52M) | ($10.66M) | **OpEx Growth:** 12% annual increase on base expenses. |\n| Legal Settlement | - | - | ($1.20M) | **One-time Item:** Lump sum expense in FY28. |\n| **Total OpEx** | **($8.50M)** | **($9.52M)** | **($11.86M)** | Sum of Core OpEx and one-time items. |\n| | | | | |\n| **GAAP Op. Income** | **$0.86M** | **$0.89M** | **$0.87M** | Final profit after all GAAP operating expenses. |\n| **Adj. Op. Income** | **$0.86M** | **$0.89M** | **$2.07M** | **Non-GAAP:** Adds back the $1.2M legal settlement. |\n\n---\n\n### Complete List of Assumptions\n\n**1. Revenue & Bookings (ASC 606)**\n*   **Subscription Model:** All revenue is recognized linearly (ratably) over the contract term.\n*   **New Booking Growth:** New ARR is calculated as 30% of the previous year's Ending ARR.\n*   **The 3-Year Deal:** The $900k deal signed July 1, 2027, contributes $300k to ARR. GAAP revenue is recognized at $25k/month ($150k in FY27; $300k in FY28).\n*   **Mid-Year Convention:** Except for the specific 3-year deal, all other new bookings and churn are assumed to occur evenly throughout the year (50% revenue impact in the year of change).\n\n**2. Retention**\n*   **Gross Churn:** 10% of the ARR at the start of the fiscal year is lost.\n*   **Net Retention:** No expansion revenue (upsells) was modeled, meaning Net Revenue Retention (NRR) is currently 90% plus new logos.\n\n**3. Cost Structure**\n*   **Gross Margin:** Maintained at 78%. This covers hosting (AWS/Azure), third-party software embedded in the product, and the Customer Success/Support teams.\n*   **Operating Expense Growth:** A \"fixed-plus-growth\" model where the base OpEx (S&M, R&D, G&A) increases by 12% annually to support the 30% bookings growth.\n\n**4. Non-Recurring Items**\n*   **Legal Settlement:** A $1.2M one-time expense is recognized in FY2028. It is included in GAAP Operating Income but excluded from Adjusted Operating Income to show core business scalability.\n\n**5. Cash & Billing**\n*   **Upfront Billing:** 100% of bookings are billed and collected upfront. This creates a significant \"Deferred Revenue\" liability on the balance sheet and ensures Cash Flow from Operations is higher than GAAP Operating Income.",
+      "annotations": [],
+      "unassigned_comment": "",
+      "judge": {
+        "score": 3,
+        "explanation": "The assistant provides a comprehensive summary table for FY2026-FY2028 with every assumption explicitly listed and linked to the numbers it drives, fully complying with GAAP.",
+        "model": "deepseek-v4-pro",
+        "response_id": "b780a735-4826-48ed-9fbd-1b64081745bb"
+      },
+      "source_response_id": "B4O2arisFtKIqtsP8duQ2AY",
+      "prompt_sha256": "050040e3bc6da9d6f3ceaf9e78a57dcc034ecd6c9046a4c57fd238e8b9661f68",
+      "finish_reason": "stop"
+    }
+  ],
+  "source_notes": [
+    "Original output retained, including character artifacts.",
+    "Annotation explanation provenance has not been independently confirmed."
+  ]
+}

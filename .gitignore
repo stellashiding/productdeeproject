@@ -1,0 +1,10 @@
+node_modules/
+*.tar.gz
+screenshots/
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+python/deeproject/viewer/
+dist/downloads/
+.venv/

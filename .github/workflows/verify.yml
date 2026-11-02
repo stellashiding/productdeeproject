@@ -1,30 +1,29 @@
-name: Verify workbench interactions
+name: Verify AI Garden and evaluation toolkit
 on:
   push:
     branches: [main]
-    paths: ['index.html', 'app.js', 'workflow.js', 'styles.css', 'garden.js', 'garden.css', 'tests/**', '.github/workflows/verify.yml']
   pull_request:
     branches: [main]
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
-  smoke:
+  verify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm install --no-save playwright@1.58.2
-      - run: npx playwright install --with-deps chromium
-      - name: Exercise desktop and mobile UI
-        run: |
-          python3 -m http.server 8027 &
-          node tests/smoke.cjs
-          node tests/workflow.cjs
-      - uses: actions/upload-artifact@v4
-        if: always()
+      - uses: actions/setup-python@v5
         with:
-          name: workbench-screenshots
-          path: screenshots
+          python-version: '3.12'
+      - name: Install wheel build tools
+        run: python -m pip install setuptools wheel
+      - name: Check JavaScript and evaluation behavior
+        run: |
+          npm run check
+          npm test
+          npm run test:harness
+      - name: Package the local evaluation toolkit
+        run: npm run package:harness

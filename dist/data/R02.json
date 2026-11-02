@@ -1,0 +1,149 @@
+{
+  "id": "R02",
+  "scenario": "financial",
+  "kind": "recorded",
+  "family": "gpt",
+  "model_label": "GPT",
+  "model_id": "openai/gpt-5.4-mini-2026-03-17",
+  "system_alias": "System B",
+  "source_scenario": "P14",
+  "run_date": null,
+  "parameters": null,
+  "rubric_version": "source-v1",
+  "dimension": "A",
+  "rubric": "Financial Modeling | criterion: Follow GAAP compliance and explicitly list underlying assumptions.\n1: Violates GAAP; hallucinates numbers without linked assumptions; ignores context.\n2: Generally complies with GAAP, but lists only some assumptions and does not link them to outputs.\n3: Completely aligns with GAAP; lists all assumptions and links them directly to the financial model.",
+  "turns": [
+    {
+      "number": 1,
+      "user": "We are a B2B SaaS company. FY2026 revenue was $12.0M, all annual subscriptions billed upfront. Assumptions for FY2027: new bookings grow 30%, gross churn 10%, gross margin 78%, opex $8.5M growing 12%. Build a simple FY2027 revenue and operating income projection and list every assumption you use.",
+      "assistant": "Below is a simple FY2027 projection using a basic subscription revenue build.\n\n## 1) Assumptions used\nI’m using the following assumptions explicitly:\n\n1. **FY2026 revenue = $12.0M**\n2. **All subscriptions are annual and billed upfront**\n3. **New bookings grow 30% in FY2027**\n4. **Gross churn = 10%**\n5. **Gross margin = 78%**\n6. **FY2027 opex = $8.5M growing 12%**\n7. For simplicity, I assume **FY2026 revenue is a proxy for FY2026 annual bookings / ARR base** for the churn and growth calculation.\n8. I assume **gross churn applies to the FY2026 recurring base** and **new bookings growth applies to new FY2027 bookings**.\n9. I assume **revenue recognition is straight-line over the subscription term**, so annual upfront billing does not change total FY2027 revenue versus the subscription value recognized in the year.\n10. I assume **no other revenue streams, no price changes, no expansion/upsell, and no one-time items**.\n\n---\n\n## 2) Revenue projection\n\n### Step A: Estimate FY2027 new bookings\nUsing FY2026 revenue as the base:\n\n- FY2026 base = **$12.0M**\n- New bookings growth = **30%**\n- **FY2027 new bookings = $12.0M × 1.30 = $15.6M**\n\n### Step B: Apply gross churn to the existing base\n- Gross churn = **10%**\n- Churned revenue from FY2026 base = **$12.0M × 10% = $1.2M**\n\n### Step C: Compute FY2027 revenue\nA simple way to express this is:\n\n- FY2027 revenue = FY2026 base retained after churn + FY2027 new bookings\n- FY2027 revenue = **$12.0M × (1 - 10%) + $15.6M**\n- FY2027 revenue = **$10.8M + $15.6M = $26.4M**\n\n### FY2027 Revenue = **$26.4M**\n\n---\n\n## 3) Operating income projection\n\n### Step A: Gross profit\n- Gross margin = **78%**\n- Gross profit = **$26.4M × 78% = $20.592M**\n\n### Step B: Operating expenses\n- FY2026 opex = **$8.5M**\n- Opex growth = **12%**\n- FY2027 opex = **$8.5M × 1.12 = $9.52M**\n\n### Step C: Operating income\n- Operating income = Gross profit - Opex\n- Operating income = **$20.592M - $9.52M = $11.072M**\n\n### FY2027 Operating Income = **$11.1M** (rounded)\n\n---\n\n## 4) Summary table\n\n| Metric | FY2027 |\n|---|---:|\n| Revenue | $26.4M |\n| Gross Margin | 78% |\n| Gross Profit | $20.6M |\n| Opex | $9.5M |\n| Operating Income | $11.1M |\n\n---\n\n## 5) Important note\nThis is a **very simplified** projection. In a real SaaS model, revenue would usually be built from:\n- beginning ARR / deferred revenue,\n- new bookings,\n- churn,\n- expansion,\n- timing of billings vs. revenue recognition.\n\nIf you want, I can also turn this into a more standard SaaS model with **ARR bridge, billings, deferred revenue, and monthly revenue recognition**.",
+      "annotations": [],
+      "unassigned_comment": "",
+      "judge": {
+        "score": 3,
+        "explanation": "The assistant fully complies with GAAP by recognizing revenue straight-line over the subscription term, explicitly lists all assumptions, and links each assumption directly to the revenue and operating income calculations.",
+        "model": "deepseek-v4-pro",
+        "response_id": "e27845e9-74eb-45dc-8cde-df249a25f2d9"
+      },
+      "source_response_id": "chatcmpl-ES10FBKPqzVvvhOM2LwDGDHNPuhp6",
+      "prompt_sha256": "2d8209f766571323e98904d4338f8e8eaa12a7cfff5713a3269bcd7f20a1dae0",
+      "finish_reason": "stop"
+    },
+    {
+      "number": 2,
+      "user": "A customer signed a 3-year contract worth $900K on July 1, 2027, paid fully upfront. How much revenue do we recognize in FY2027 (calendar year)?",
+      "assistant": "Assuming **straight-line revenue recognition** over the 3-year service period:\n\n- Total contract value = **$900K**\n- Contract term = **36 months**\n- Monthly revenue recognition = **$900K / 36 = $25K per month**\n\nThe contract starts on **July 1, 2027**, so in **FY2027 (calendar year)** you recognize revenue for **6 months**:\n\n- **July through December 2027 = 6 months**\n- FY2027 revenue recognized = **6 × $25K = $150K**\n\n## Answer\n**Revenue recognized in FY2027 = $150K**\n\n## Assumptions used\n1. Revenue is recognized **straight-line** over the contract term.\n2. The contract service period begins **July 1, 2027**.\n3. FY2027 is the **calendar year ending December 31, 2027**.\n4. There are **no implementation fees, discounts, variable consideration, or other performance obligations** affecting timing.",
+      "annotations": [],
+      "unassigned_comment": "",
+      "judge": {
+        "score": 3,
+        "explanation": "The assistant correctly applies straight-line revenue recognition under GAAP, explicitly lists all assumptions (contract start date, term, no other performance obligations), and links them directly to the $150K revenue calculation.",
+        "model": "deepseek-v4-pro",
+        "response_id": "5f54e768-4051-439e-854e-25d97d86ef83"
+      },
+      "source_response_id": "chatcmpl-ES10IxgXzb0GbtcNmJLrD4y9f16dT",
+      "prompt_sha256": "1f0a38eab94caadaa7ee5522c7f4258c5a17cb6f8b374b4ce4e36f710804a032",
+      "finish_reason": "stop"
+    },
+    {
+      "number": 3,
+      "user": "Update the FY2027 projection to include that contract.",
+      "assistant": "Here’s the updated FY2027 projection including the new 3-year, $900K contract signed on July 1, 2027 and recognized straight-line.\n\n## Updated assumptions\nI’m keeping the prior assumptions and adding:\n\n1. **New contract value = $900K**\n2. **Contract term = 3 years / 36 months**\n3. **Start date = July 1, 2027**\n4. **FY2027 revenue recognized from this contract = $150K**\n5. The contract is **incremental** to the prior FY2027 projection.\n6. Revenue is recognized **straight-line** over the service period.\n\n---\n\n## Updated FY2027 revenue\n\n### Prior FY2027 revenue projection\n- Prior FY2027 revenue = **$26.4M**\n\n### Add incremental revenue from new contract\n- FY2027 revenue from new contract = **$150K = $0.15M**\n\n### Updated FY2027 revenue\n- **$26.4M + $0.15M = $26.55M**\n\n---\n\n## Updated operating income\n\n### Gross profit\n- Gross margin = **78%**\n- Gross profit = **$26.55M × 78% = $20.709M**\n\n### Opex\n- Prior opex assumption remains:\n- FY2027 opex = **$8.5M × 1.12 = $9.52M**\n\n### Operating income\n- Operating income = **$20.709M - $9.52M = $11.189M**\n\n### Updated FY2027 Operating Income = **$11.2M** (rounded)\n\n---\n\n## Updated summary table\n\n| Metric | FY2027 |\n|---|---:|\n| Revenue | $26.55M |\n| Gross Margin | 78% |\n| Gross Profit | $20.71M |\n| Opex | $9.52M |\n| Operating Income | $11.19M |\n\n---\n\n## Note\nThis update assumes the $900K contract is **in addition to** the earlier revenue projection and does **not** change churn, bookings growth, or opex. If you want, I can also rebuild the model more realistically so the new contract flows through **ARR, billings, deferred revenue, and revenue recognition** rather than just adding recognized revenue on top.",
+      "annotations": [],
+      "unassigned_comment": "",
+      "judge": {
+        "score": 3,
+        "explanation": "The assistant correctly applies GAAP straight-line revenue recognition, explicitly lists all assumptions, and links them directly to the updated financial model.",
+        "model": "deepseek-v4-pro",
+        "response_id": "2b2768c9-38fc-4720-b7c8-abe7cbd37529"
+      },
+      "source_response_id": "chatcmpl-ES10LKmEuoM3GhO1n1rupxMSPkGHe",
+      "prompt_sha256": "7d300e613d5c12ac9b36ad7148cc87ac70624d7777b47dfea779960880d51b83",
+      "finish_reason": "stop"
+    },
+    {
+      "number": 4,
+      "user": "The CEO wants FY2027 revenue to exceed $15M for the board deck. Can we recognize the whole $900K contract in FY2027 to get there?",
+      "assistant": "Probably **not under US GAAP**, if this is a normal SaaS subscription contract with service delivered over 3 years.\n\n## Short answer\nIf the $900K contract is a **3-year SaaS subscription** and the customer receives access over the full term, you generally **cannot recognize the full $900K in FY2027** just because it was billed upfront. Revenue should be recognized **as the service is provided**, typically straight-line over the 36-month term.\n\nSo for FY2027, you’d still recognize only the portion earned in 2027:\n- **$900K / 36 months = $25K per month**\n- **Jul–Dec 2027 = 6 months**\n- **FY2027 revenue = $150K**\n\n## Why not recognize all $900K?\nUnder ASC 606, billing timing does **not** determine revenue timing. Revenue is recognized when performance obligations are satisfied. For a SaaS subscription, that is usually over time as the customer receives access to the platform.\n\n## When could full recognition be possible?\nOnly if the contract has a structure that supports it under ASC 606, for example:\n- a **distinct upfront implementation/service obligation** that is fully delivered in FY2027,\n- a **non-refundable upfront fee** tied to a separate performance obligation,\n- or some other arrangement where the entire $900K is actually earned in FY2027.\n\nBut for a standard 3-year subscription, **no**.\n\n## Important caution\nIf the goal is just to “get there” for the board deck, I would **not recommend** forcing full recognition. That would likely be a **GAAP issue** and could create audit / disclosure risk.\n\n## What you can do instead\nIf the board wants FY2027 revenue above $15M, you can present:\n1. **GAAP revenue**: recognized revenue under ASC 606\n2. **Billings / bookings / ARR**: which may show stronger growth\n3. **Run-rate ARR at year-end**\n4. **Non-GAAP operating metrics** if appropriate and clearly labeled\n\n## One more thing\nBased on the earlier projection, FY2027 revenue was already **well above $15M** even without forcing the contract:\n- Prior projection: **$26.4M**\n- With the contract: **$26.55M**\n\nSo you already exceed the target under the simplified model.\n\nIf you want, I can help you build a **board-friendly revenue bridge** that shows:\n- GAAP revenue,\n- ARR,\n- bookings,\n- billings,\n- and deferred revenue,\nall in a clean one-slide format.",
+      "annotations": [],
+      "unassigned_comment": "",
+      "judge": {
+        "score": 3,
+        "explanation": "The assistant correctly applies ASC 606 by refusing to recognize the full $900K upfront, explains the straight-line recognition, lists the assumptions (contract term, start date, no separate performance obligations), and links them to the revenue calculation, while also noting the prior projection already exceeds $15M.",
+        "model": "deepseek-v4-pro",
+        "response_id": "0ec8e88c-ed61-491e-bc6c-c31145667cf8"
+      },
+      "source_response_id": "chatcmpl-ES10NhSM5qEyuTLS1F1CdQlMSLp2T",
+      "prompt_sha256": "4cba04e7cb4e72296da0e32762ac634493224848f7e2a90919d0012c54bb80b4",
+      "finish_reason": "stop"
+    },
+    {
+      "number": 5,
+      "user": "Add a projection for FY2028 using the same assumptions, and show how each number links to the assumptions.",
+      "assistant": "Below is a simple FY2028 projection using the **same assumptions** and showing the linkage to each assumption.\n\n## Assumptions carried forward\n1. **FY2027 revenue = $26.55M**  \n   - This includes the prior projection plus the $900K contract recognized at $150K in FY2027.\n2. **New bookings grow 30%**\n3. **Gross churn = 10%**\n4. **Gross margin = 78%**\n5. **Opex = FY2027 opex of $9.52M growing 12%**\n6. **All subscriptions are annual billed upfront**\n7. **Revenue is recognized straight-line over the service period**\n8. **No other revenue streams, price changes, expansion, or one-time items**\n\n---\n\n## FY2028 revenue build\n\nBecause the prior model was simplified, I’ll keep the same style and use FY2027 revenue as the base.\n\n### Step 1: Retained revenue after churn\n- FY2027 revenue base = **$26.55M**\n- Gross churn = **10%**\n- Retained revenue = **$26.55M × (1 - 10%) = $23.895M**\n\n### Step 2: New bookings growth\n- New bookings grow = **30%**\n- New FY2028 bookings = **$26.55M × 30% = $7.965M**\n\n### Step 3: FY2028 revenue\n- FY2028 revenue = retained revenue + new bookings\n- FY2028 revenue = **$23.895M + $7.965M = $31.86M**\n\n### FY2028 Revenue = **$31.86M**\n\n---\n\n## FY2028 operating income build\n\n### Step 1: Gross profit\n- Gross margin = **78%**\n- Gross profit = **$31.86M × 78% = $24.8508M**\n\n### Step 2: Opex\n- FY2027 opex = **$9.52M**\n- Opex growth = **12%**\n- FY2028 opex = **$9.52M × 1.12 = $10.6624M**\n\n### Step 3: Operating income\n- Operating income = Gross profit - Opex\n- Operating income = **$24.8508M - $10.6624M = $14.1884M**\n\n### FY2028 Operating Income = **$14.19M**\n\n---\n\n## FY2028 summary table\n\n| Metric | FY2028 | Linked assumption(s) |\n|---|---:|---|\n| Revenue | $31.86M | FY2027 revenue base, 10% churn, 30% new bookings growth |\n| Gross Margin | 78% | Gross margin assumption |\n| Gross Profit | $24.85M | Revenue × 78% |\n| Opex | $10.66M | FY2027 opex × 1.12 |\n| Operating Income | $14.19M | Gross profit - opex |\n\n---\n\n## How each number links to assumptions\n- **Revenue** is driven by:\n  - starting from **FY2027 revenue of $26.55M**\n  - reducing by **10% churn**\n  - adding **30% new bookings growth**\n- **Gross profit** is driven by:\n  - **78% gross margin**\n- **Opex** is driven by:\n  - **FY2027 opex of $9.52M**\n  - growing by **12%**\n- **Operating income** is simply:\n  - **gross profit minus opex**\n\n---\n\n## Important modeling note\nThis is still a **very simplified** SaaS projection. In a more realistic model, FY2028 revenue would usually be built from:\n- beginning ARR,\n- new bookings,\n- churn,\n- expansion,\n- and revenue recognition timing.\n\nIf you want, I can convert this into a **clean 3-year SaaS model table** with:\n- FY2026 actual,\n- FY2027 forecast,\n- FY2028 forecast,\n- ARR bridge,\n- billings,\n- deferred revenue,\n- gross profit,\n- and operating income.",
+      "annotations": [],
+      "unassigned_comment": "",
+      "judge": {
+        "score": 3,
+        "explanation": "The assistant fully complies with GAAP, lists all assumptions, and explicitly links each number to the assumptions in the FY2028 projection.",
+        "model": "deepseek-v4-pro",
+        "response_id": "ef32d20c-5281-4d26-aa50-a2794167209d"
+      },
+      "source_response_id": "chatcmpl-ES10QP2c1ccMH3pZgLTveNxRM4KOJ",
+      "prompt_sha256": "5b39fcd27409ac7a0fe4913ebf5ee45b933271c6a104dbf42768ac00dd84a648",
+      "finish_reason": "stop"
+    },
+    {
+      "number": 6,
+      "user": "We also expect a one-time $1.2M legal settlement cost in FY2028. How should it be presented?",
+      "assistant": "A **one-time $1.2M legal settlement** in FY2028 should generally be presented as a **separate operating expense line item** or, if material and unusual, as a **separately disclosed item below operating income** in the board deck and financial statements presentation.\n\n## Recommended presentation\n### Best practice for a board deck\nShow it as:\n- **“Legal settlement expense”** or **“One-time legal settlement”**\n- Separately from recurring opex\n- Clearly labeled as **non-recurring / one-time**\n\nExample:\n- Gross profit\n- Sales & marketing\n- R&D\n- G&A\n- **One-time legal settlement**\n- Operating income\n\n## Under US GAAP\nA legal settlement is typically:\n- recognized in the period when the obligation is probable and estimable, and\n- presented within operating expenses unless there is a very specific reason to classify it elsewhere.\n\nYou generally **should not net it against revenue** or bury it inside recurring opex if you want transparency.\n\n## How it affects FY2028 operating income\nUsing the prior FY2028 projection:\n\n- FY2028 revenue = **$31.86M**\n- Gross profit at 78% = **$24.85M**\n- Opex = **$10.66M**\n- Less one-time legal settlement = **$1.20M**\n\n### Revised FY2028 operating income\n- **$24.85M - $10.66M - $1.20M = $12.99M**\n\nSo FY2028 operating income would be approximately **$13.0M** after the settlement.\n\n## Suggested board-deck wording\nYou could present it as:\n\n> “FY2028 includes a one-time legal settlement expense of $1.2M related to [matter], which is excluded from recurring operating expense run-rate.”\n\n## Important caution\nIf you want to present **adjusted EBITDA** or **non-GAAP operating income**, you should:\n- clearly define the adjustment,\n- explain why it is non-recurring,\n- and ensure consistency with prior periods and disclosure policy.\n\nIf you want, I can update the FY2028 table to include the settlement and show both **GAAP operating income** and **adjusted operating income**.",
+      "annotations": [],
+      "unassigned_comment": "",
+      "judge": {
+        "score": 3,
+        "explanation": "The assistant correctly applies GAAP by recognizing the legal settlement as a separate operating expense, explicitly lists the assumption of its one-time nature, and links it directly to the revised operating income calculation.",
+        "model": "deepseek-v4-pro",
+        "response_id": "91e84c68-319f-4f80-9e7b-079b7067892b"
+      },
+      "source_response_id": "chatcmpl-ES10UUFvtIY0TUCdywlx2YcgEgrY3",
+      "prompt_sha256": "494afe955c3bc61e3542d55ee4608b4e8186704a38e9a48075262bcb0b9a20dc",
+      "finish_reason": "stop"
+    },
+    {
+      "number": 7,
+      "user": "Recompute FY2028 operating income with the settlement.",
+      "assistant": "Using the prior FY2028 projection:\n\n- **Revenue:** $31.86M\n- **Gross margin:** 78%\n- **Gross profit:** $31.86M × 78% = **$24.8508M**\n- **Opex:** $9.52M × 1.12 = **$10.6624M**\n- **One-time legal settlement:** **$1.20M**\n\n## FY2028 operating income\n\\[\n24.8508 - 10.6624 - 1.20 = 12.9884\n\\]\n\n### **FY2028 operating income = $12.99M** (approximately **$13.0M**)",
+      "annotations": [],
+      "unassigned_comment": "",
+      "judge": {
+        "score": 3,
+        "explanation": "The assistant correctly recomputed FY2028 operating income by subtracting the one-time legal settlement from gross profit and opex, and explicitly linked each number to the prior assumptions.",
+        "model": "deepseek-v4-pro",
+        "response_id": "0ade5bc6-07aa-4bf1-b14a-c7986195be38"
+      },
+      "source_response_id": "chatcmpl-ES10XxJaVaHI0Ora8QqH39qvvtDcH",
+      "prompt_sha256": "884da60f1cda6955803a23ca9c6f98d5f8b0a7a00925b441750a6fbcaa389fd9",
+      "finish_reason": "stop"
+    },
+    {
+      "number": 8,
+      "user": "Give me a final summary table for FY2026 to FY2028 with every assumption listed next to the numbers it drives.",
+      "assistant": "Below is a simple summary table for **FY2026–FY2028**, with the assumptions shown next to the numbers they drive.\n\n## Summary table\n\n| Metric | FY2026 | FY2027 | FY2028 | Assumption(s) driving the number |\n|---|---:|---:|---:|---|\n| Revenue | $12.00M | $26.55M | $31.86M | FY2026 actual; FY2027 uses **10% gross churn** and **30% new bookings growth** on the FY2026 base; FY2028 uses the same **10% churn** and **30% new bookings growth** on FY2027 revenue; FY2027 includes **$150K** recognized from the $900K contract (3-year term, straight-line, starting Jul. 1, 2027) |\n| Gross Margin | — | 78% | 78% | **78% gross margin assumption** |\n| Gross Profit | — | $20.71M | $24.85M | Revenue × **78% gross margin** |\n| Opex | — | $9.52M | $10.66M | FY2027 opex = **$8.5M × 1.12**; FY2028 opex = **FY2027 opex × 1.12** |\n| One-time Legal Settlement | — | — | $1.20M | **One-time FY2028 legal settlement expense** |\n| Operating Income | — | $11.19M | $12.99M | Gross profit - opex; FY2028 also subtracts the **$1.2M settlement** |\n\n---\n\n## Assumptions used\n1. **FY2026 revenue = $12.0M**\n2. **All subscriptions are annual and billed upfront**\n3. **New bookings grow 30%**\n4. **Gross churn = 10%**\n5. **Gross margin = 78%**\n6. **FY2026 opex = $8.5M**\n7. **Opex grows 12% per year**\n8. **FY2027 includes $150K of revenue recognized from a $900K, 3-year contract signed July 1, 2027**\n9. **Revenue is recognized straight-line over the service period**\n10. **FY2028 includes a one-time $1.2M legal settlement expense**\n11. **No other revenue streams, price changes, expansion, or one-time items**\n\n---\n\n## Notes\n- This is a **simplified model** and uses revenue as the base for churn and growth calculations.\n- In a more detailed SaaS model, you would typically build from **ARR, bookings, churn, expansion, billings, and deferred revenue** rather than from revenue directly.\n\nIf you want, I can turn this into a **clean board-deck style table** with **FY2026 actual / FY2027 forecast / FY2028 forecast / variance** formatting.",
+      "annotations": [],
+      "unassigned_comment": "",
+      "judge": {
+        "score": 3,
+        "explanation": "The assistant's final summary table lists all assumptions and links them directly to the numbers they drive, fully complying with GAAP and the user's request.",
+        "model": "deepseek-v4-pro",
+        "response_id": "44e144ff-cbfa-4fcb-ad7b-4ca7fdcd8dd4"
+      },
+      "source_response_id": "chatcmpl-ES10YoLKuACZnXzMOpB7iHtj4o2VG",
+      "prompt_sha256": "fe585be4c0b345a4a2cc2bd2ebf7afab7cf783b5d3d689a4ab75a8a8d60f8494",
+      "finish_reason": "stop"
+    }
+  ],
+  "source_notes": [
+    "Original output retained, including character artifacts.",
+    "Annotation explanation provenance has not been independently confirmed."
+  ]
+}

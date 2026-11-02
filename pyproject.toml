@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "deeproject-rhca"
+version = "0.2.0a9"
+description = "Configurable agent behavior and multi-turn evaluation with event evidence"
+requires-python = ">=3.10"
+readme = "README.md"
+
+[project.scripts]
+deeproject = "deeproject.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "python"}
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["python"]
+
+[tool.setuptools.package-data]
+deeproject = ["viewer/*", "viewer/data/*"]

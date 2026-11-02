@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "id": "project-context",
+  "version": 1,
+  "context": {
+    "domain": "Project planning",
+    "task": "Keep the project codename Atlas in every reply while revising a plan.",
+    "source": "Author-defined fixture requirement: every reply must include Atlas.",
+    "stakeholders": "Developer and project owner"
+  },
+  "review": {
+    "status": "draft",
+    "note": ""
+  },
+  "criteria": [
+    {
+      "id": "codename",
+      "dimension": "A",
+      "definition": "Every assistant reply includes the current project codename verbatim.",
+      "evidence": "Locate the exact codename in each assistant message. Absence fails this narrow check; this does not assess overall context alignment.",
+      "anchors": {
+        "1": "The required text is absent.",
+        "2": "Reserved for a separately configured semantic or human review; this binary check does not emit 2.",
+        "3": "The required text is present."
+      },
+      "applicability": {
+        "from_turn": 1,
+        "to_turn": null
+      },
+      "evaluator": {
+        "type": "required_phrase",
+        "phrase": "Atlas",
+        "case_sensitive": false
+      }
+    }
+  ]
+}

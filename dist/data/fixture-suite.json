@@ -1,0 +1,10 @@
+{
+  "id": "atlas-handover",
+  "version": 1,
+  "messages": [
+    "Confirm the project codename Atlas and propose a short launch plan.",
+    "Shorten the plan to two steps. Keep the project codename.",
+    "Move the launch to Friday. Keep the project codename.",
+    "Give the final handover. Keep the project codename."
+  ]
+}
