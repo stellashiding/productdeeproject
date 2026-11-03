@@ -71,3 +71,35 @@ Limits:
 - Consolidated font sizes and weights; removed decorative tracking. Monospace remains only for code/preformatted examples. Compact scene labels retain a smaller responsive size.
 - Browser checked Review: computed font families for headings, paragraphs and controls resolve to the same stack; no horizontal page overflow. Screenshot visually confirms the unified hierarchy.
 - JavaScript syntax checks passed. Viewer installation package advanced to 0.2.0a3. No evaluator or source-data changes.
+
+## Pipeline & BTV — 2026-11-02
+
+- 60 scripted synthetic trajectories, 2,724 events, 3 domains × 5 patterns × 4 lengths. No model/API calls. Same event structures reused across domains; no domain-generalization claim.
+- Actual Python batch: 12 candidates, 48 problem cases, 0 review; 24 final checks pass despite retained event failures. Timing in data/pipeline/summary.json covers assessment only.
+- 22 JavaScript + 22 Python tests passed. BTV hand calculation, global peak drop, late-failure proposition, invalid anchors, Anchor 1 separate from pass, and 60-case Python/browser parity checked.
+- Installed wheel generated/evaluated the 60-case batch; nested viewer/pipeline data present. Exported ZIP re-ran offline with included source.
+- Browser checks: local batch rerun; Healthcare/permission heatmap filter; exact event evidence navigation; 3D Garden navigation and entry transition; CSV download.
+- Browser import check: valid + duplicate + incomplete RHCA + invalid order + null => 5 originals retained, 1 candidate and 4 review. Unknown-domain and duplicate-ID selector handling corrected after this check.
+- These are implementation/UI checks, not a participant usability study, semantic evaluator accuracy test, or 10,000-record load benchmark.
+
+### Multidimensional visualization revision
+
+- Primary case view now shows four aligned RHCA lanes with per-checkpoint scores; aggregate mean/BTV are secondary summaries.
+- Domain × RHCA overview counts supplied anchors; checkpoint distributions retain Anchor 1/2/3 separately. Event-rule matrix is a separate disclosure.
+- Three visualization checks validate actual per-dimension counts, missing-rating gaps, and escaping of imported labels.
+- Browser: selecting checkpoint 1 updates all four displayed values to 3 and opens event e5 in Workbench; checkpoint 3 retains R=2, H=C=A=1. No synthetic anchors or evaluation outcomes changed.
+
+### Matrix view revision
+
+- Primary view is now an accessible table: RHCA rows × chronological checkpoint columns, with discrete supplied scores and an explicit missing-rating state.
+- Selection test verifies that a cell retains both dimension and checkpoint; browser check of R/checkpoint 2 updates the sidebar to event e12 and all four scores to 3, and A/checkpoint 3 restores e17 with R=2, H=C=A=1.
+- Numeric anchors and color jointly encode scores; selected cells have an outline. Original scores and evaluation outcomes are unchanged.
+
+### Synthetic filtering and Public Dataset Audit — 0.2.0a13
+
+- Independent menu entries: Pipeline & Insights and Public Dataset Audit; Workbench entry card removed. Home remains minimal.
+- Actual controlled suite: 24 supplied-rating fixtures / 744 events. 6 candidate, 15 problem, 3 review. All baseline event checks pass; BTV/Anchor-1/missing-rating routing is assessed separately. Eight patterns repeated across three domain labels are not independent domain validation.
+- Equal means: late drop BTV=1.25 versus early low BTV=2.25. Anchor 1 remains a separate guard even where BTV passes. Changing expected labels does not change filtering.
+- Browser: local rerun preserves the preset identity, candidate output contains six selectable cases and downloads as JSON, review output contains three incomplete-rating cases with no computed BTV, and both pages are reachable from the left menu.
+- Public audit: actual 20,363 metadata records reconcile to 18,137 no-flag / 2,226 review. Reference filter shows 797 records. The page does not publish the original medical corpus or use BTV/RHCA. Thirty prepared tasks remain not run.
+- 30 JavaScript + 24 Python tests passed before packaging. Installed CLI is checked with --controlled and nested audit/filter viewer assets.

@@ -17,6 +17,12 @@ def read(path):
 def main(argv=None):
     parser = argparse.ArgumentParser(description='Design specifications, run multi-turn checks, inspect evidence.')
     sub = parser.add_subparsers(dest='command', required=True)
+    p = sub.add_parser('btv', help='Compute paper Eq. (1) from supplied complete RHCA anchors.')
+    p.add_argument('ratings'); p.add_argument('--out')
+    p = sub.add_parser('pipeline', help='Evaluate and route a batch locally; no model calls.')
+    p.add_argument('--input'); p.add_argument('--template'); p.add_argument('--count', type=int, default=60)
+    p.add_argument('--controlled', action='store_true', help='Use controlled BTV rating sequences, with no semantic judge.')
+    p.add_argument('--seed', type=int, default=20261102); p.add_argument('--out', required=True)
     p = sub.add_parser('init', help='Write an Atlas fixture specification, suite and target module.')
     p.add_argument('directory', nargs='?', default='deeproject-example')
     p.add_argument('--profile', choices=['rhca','agent'], default='rhca')
@@ -27,7 +33,26 @@ def main(argv=None):
     p = sub.add_parser('view'); p.add_argument('result', nargs='?'); p.add_argument('--port',type=int,default=8765); p.add_argument('--no-browser',action='store_true')
     args = parser.parse_args(argv)
     try:
-        if args.command == 'init':
+        if args.command == 'btv':
+            from .btv import verify
+            output = json.dumps(verify(read(args.ratings)), indent=2)
+            if args.out: Path(args.out).write_text(output + '\n', encoding='utf-8')
+            print(output)
+        elif args.command == 'pipeline':
+            from .pipeline import generate, write_batch
+            if args.input and args.controlled:
+                raise ValueError('Choose --input or --controlled, not both.')
+            if args.input:
+                records = read(args.input)
+            else:
+                template = Path(args.template) if args.template else Path(__file__).parent / 'viewer' / 'data' / 'agent-spec.json'
+                if args.controlled:
+                    from .stress import controlled_cases
+                    records = controlled_cases(read(template))
+                else:
+                    records = generate(read(template), args.count, args.seed)
+            print(json.dumps(write_batch(records, args.out), indent=2))
+        elif args.command == 'init':
             root=Path(args.directory); root.mkdir(parents=True,exist_ok=True)
             source=Path(__file__).parent/'viewer'/'data'
             if args.profile == 'agent':
@@ -79,7 +104,7 @@ def main(argv=None):
             with tempfile.TemporaryDirectory(prefix='deeproject-view-') as tmp:
                 shutil.copytree(Path(__file__).parent/'viewer',tmp,dirs_exist_ok=True)
                 index=read(Path(tmp)/'data'/'index.json')
-                index['runtime']={'mode':'local','version':'0.2.0a9'}
+                index['runtime']={'mode':'local','version':'0.2.0a13'}
                 if args.result:
                     p=Path(args.result); run=read(p/'result.json' if p.is_dir() else p)
                     (Path(tmp)/'data'/'local-result.json').write_text(json.dumps(run),encoding='utf-8')

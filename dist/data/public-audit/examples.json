@@ -1,0 +1,37 @@
+[
+  {
+    "row": 3,
+    "flag": "possible_missing_image",
+    "sha256": "499c66dbcdba7b8b06216e97b20fe1fa097f2eaef4097d5d024f2a29b8bc1e12"
+  },
+  {
+    "row": 95,
+    "flag": "encoding_review",
+    "sha256": "d5be6ea375591a1fbf2f977dc434988eab28d1596d7d061159b66fd74f3fcd78"
+  },
+  {
+    "row": 2390,
+    "flag": "duplicate_question_after_first",
+    "sha256": "d7b9802c9b26391c8e1b9c8add65b80e20c4bc60aaf592e2d729d86ceb5f02c5"
+  },
+  {
+    "row": 19543,
+    "flag": "missing_reference_answer",
+    "sha256": "e0d530240f341634696072175268e45a534fe20bf9833a6719c642627bff7430"
+  },
+  {
+    "row": 19718,
+    "flag": "unparsed_or_missing_options",
+    "sha256": "51117c4842ac9ef5ddaeb48efea971d656f0f1bb4a76253d722e0415f2a6b7c1"
+  },
+  {
+    "row": 19718,
+    "flag": "answer_label_format_review",
+    "sha256": "51117c4842ac9ef5ddaeb48efea971d656f0f1bb4a76253d722e0415f2a6b7c1"
+  },
+  {
+    "row": 20249,
+    "flag": "answer_label_not_in_options",
+    "sha256": "45ff540ea4e9c513004beaf84c4ce35df1b76cbb7b6bf8b15e4a5fc2a23b632e"
+  }
+]

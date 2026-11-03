@@ -2,24 +2,7 @@
 
 Define how a human-facing AI system should behave, execute explicit checks, and inspect event evidence and history in a Workbench or 3D Garden. RHCA is a starter profile; dimensions are customizable.
 
-## Repository and preview
-
-This repository is synchronized with the AI Garden implementation published at https://deeproject-ai-garden-v2.stellading.chatgpt.site/.
-
-- Current browser application: `dist/`.
-- Python evaluation toolkit: `python/deeproject/`.
-- GitHub Pages: https://stellashiding.github.io/productdeeproject/.
-- Synced Sites source commit: `23469313d86bd8c7516a5751224311335e6065ca`.
-
-Preview the current viewer with:
-
-```bash
-python3 -m http.server 8000 --directory dist
-```
-
-GitHub Actions checks the browser and Python evaluation logic, builds the downloadable wheel, and publishes `dist/`. The root landing file redirects local previews to `dist/`. Older root-level JavaScript/CSS and `tests/*.cjs` belong to the previous prototype; the current checks are the npm commands below.
-
-## Version 0.2.0a9
+## Version 0.2.0a10
 
 - Four-step authoring: task/boundaries, behaviors/dimensions, rules/evidence, review/package. Agent behavior, RHCA and blank profiles. Add/remove dimensions and criteria; versioned local specifications and exports.
 - Event schema 2: ordered user, assistant, goal_update, permission, requirement_update, action, observation, verification, completion and metric events. Stable IDs and validated source references.
@@ -34,10 +17,10 @@ This alpha checks **recorded fields**. A matching goal ID does not prove semanti
 
 ## Install and evaluate events
 
-Download `deeproject_rhca-0.2.0a9-py3-none-any.whl` from Docs. Python 3.10+; runtime uses only the standard library. The distribution name remains compatible with the earlier package.
+Download `deeproject_rhca-0.2.0a10-py3-none-any.whl` from Docs. Python 3.10+; runtime uses only the standard library. The distribution name remains compatible with the earlier package.
 
 ```bash
-python -m pip install ./deeproject_rhca-0.2.0a9-py3-none-any.whl
+python -m pip install ./deeproject_rhca-0.2.0a10-py3-none-any.whl
 deeproject init my-agent-evaluation --profile agent
 cd my-agent-evaluation
 deeproject validate spec.json --executable
@@ -82,6 +65,51 @@ Schema-1 custom Python judges receive `(prior_turns, criterion)` and return `sco
 
 ## Viewer, exports and provenance
 
+### BTV and the synthetic batch (0.2.0a10)
+
+`python/deeproject/btv.py` and `dist/btv.js` implement the supplied ICLR 2027
+submission §3.2 Eq. (1). Complete R/H/C/A integer anchors are equally weighted;
+the inverse-power mean is reduced by the maximum drop from an earlier peak.
+Defaults: p=1, lambda=0.5, passing threshold=2. Any Anchor 1 is reported
+separately even if BTV passes. The verifier consumes ratings; it does not infer
+semantic scores, authenticate event logs, or diagnose clinical correctness.
+
+```bash
+deeproject btv ratings.json --out btv.json
+deeproject pipeline --count 60 --out results/batch
+deeproject pipeline --input input.json --out results/imported
+# From this source checkout:
+python scripts/run_synthetic.py
+```
+
+`ratings.json` is an array of complete objects such as
+`{"R":3,"H":3,"C":3,"A":3}`. Batch inputs are arrays of records containing
+`id`, `domain`, `events`, `specification`, and `rhca`; each `rhca` entry has
+`event_id` and `scores`. See `dist/data/pipeline/input.json`.
+
+The committed batch consists of 60 **programmatically constructed** logs and
+**scripted RHCA anchors**, not real agent runs, human annotations, or LLM-judge
+outputs. It crosses 3 domains, 5 patterns and 4 action-checkpoint lengths
+(6/8/10/12). Domains extend paper tasks P08 (Coding), P04/P06 (Healthcare),
+and P10 (FinTech); new event/tool protocols are not original participant data.
+The same failure structures are reused across domains. Seed: 20261102.
+This checks processing mechanics, not domain generalization or evaluator accuracy.
+
+The routing policy retains originals. Invalid/duplicate/incomplete records go to
+review; event failures, BTV below threshold or any supplied Anchor 1 go to
+problem cases; the remainder are candidates, not certified safe examples.
+Synthetic expected labels are retained separately and not read by the evaluator.
+Runtime measures in `summary.json` cover local assessment only, excluding input
+generation, serialization, export and UI rendering; they are not a large-scale
+benchmark. No API or model is called. No 10,000-record test has been run here.
+
+From **Workbench → Pipeline & insights**, rerun the batch locally, import a
+compatible JSON batch, filter cases, inspect four aligned RHCA rating lanes, open exact event
+evidence or the 3D Garden, and export JSON/CSV. The ZIP includes original inputs,
+results, summaries and Python source for reproduction. Browser imports are limited
+to 5 MB, 1,000 records and 100,000 events. For custom Python bindings use the local
+package; browser evaluation never executes Python.
+
 `deeproject view` serves a temporary viewer copy on `127.0.0.1`; Ctrl+C stops it. Results imports preserve records; raw event logs can be evaluated through Run. Design exports specifications; Results exports reports and results JSON. Browser storage is origin-local; export files to preserve work.
 
 The nine original recorded conversations span three domains and three models, with 78 turns and 34 double-rated human turns. Imported ratings cover A only. Six human disagreements are unresolved. Original explanations may involve AI assistance and their provenance remains unconfirmed. These records do not establish model-family rankings or agent tool-use behavior.
@@ -100,3 +128,44 @@ npm run package:harness
 Buildless viewer assets live in `dist/`; Python SDK in `python/deeproject/`. The package script copies current viewer assets and excludes previous downloads. Generated wheels and viewer copies are ignored by Git; deployment includes the wheel artifact. Browser and Python event-engine parity is tested with both fixtures.
 
 Licenses for publication of code and supplied datasets have not been selected. No open-source or dataset redistribution license is implied.
+
+Viewer revision 0.2.0a11 makes supplied R/H/C/A ratings visible separately, with shared checkpoint selection and domain-by-dimension anchor distributions. Aggregate BTV and the arithmetic mean remain secondary summaries. Missing ratings remain gaps; no scores or synthetic inputs were altered.
+
+Viewer revision 0.2.0a12 uses a dimension-by-checkpoint matrix as the primary case view. Each selectable cell displays its supplied anchor; the selected dimension and event remain explicit. Missing anchors are shown as a dash and never imputed.
+
+### Controlled filtering and public dataset audit (0.2.0a13)
+
+The left menu has independent Pipeline & Insights and Public Dataset Audit
+entries. Workbench retains individual run inspection; it no longer contains a
+pipeline entry card.
+
+```bash
+deeproject pipeline --controlled --out results/controlled
+# From the checkout:
+python scripts/run_controlled_filter.py
+```
+
+Controlled tests use eight deliberately assigned RHCA rating patterns repeated
+across three domain labels (24 fixtures). All baseline event checks pass. Ratings
+are separate test inputs, not judgments inferred from the event text. The suite
+includes equal-mean reordered sequences, a retained historical drop, a single
+Anchor 1 despite BTV passing, a mild decline without Anchor 1, the exact passing
+threshold, and incomplete ratings. Predeclared expected routes are not read by
+the evaluator. This verifies mechanics and routing, not semantic accuracy or
+domain generalization. The original 60-event-fixture batch remains selectable.
+
+The default controlled batch produces 6 candidate, 15 problem and 3 review
+records. BTV is computed for 21 records, with 9 below threshold. Six additional
+records pass BTV but retain Anchor 1 and are therefore routed to problem cases.
+Originals and reasons remain in the full result; filtered raw inputs can be
+exported separately and rerun. The decision policy is BTV plus separate Anchor 1
+and event/evidence checks, not BTV alone.
+
+Public Dataset Audit displays the completed structural audit of 20,363 records
+from OpenMedical/medical-data, pinned to db65d76f894f90463bfbe6a4e8bbda5a7d316746.
+18,137 records have no configured flags and 2,226 need review. Flag counts overlap.
+This page does not use RHCA/BTV or assess medical correctness. It includes source
+row IDs, hashes and review reasons, not the original medical corpus. The 30
+prepared staged tasks have no model responses or ratings and remain marked not
+run. Source licensing, per-record source attribution and contamination limits
+are stated in the page. No model API is used by either demonstration.

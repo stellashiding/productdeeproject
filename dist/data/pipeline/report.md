@@ -1,0 +1,22 @@
+# Synthetic pipeline results
+
+Synthetic logs and scripted scores test mechanics, not model performance, semantic evaluator accuracy or customer scale.
+
+- records: 60
+- events: 2724
+- routes: {'candidate': 12, 'problem': 48, 'review': 0}
+- btv_computed: 60
+- btv_failed: 48
+- anchor1_trajectories: 48
+- final_success_with_event_failures: 24
+- evaluation_seconds: 0.10547042100006365
+- logs_per_second: 568.8798758086288
+- evaluated_at: 2026-11-02T21:58:22.949179+00:00
+- python: 3.12.14
+- platform: Linux-6.18.57-x86_64-with-glibc2.41
+- scope: Synthetic logs and scripted scores test mechanics, not model performance, semantic evaluator accuracy or customer scale.
+- policy_version: batch-routing-v1
+- generator: synthetic-agent-protocol-v1
+- input_sha256: a3006802b098b1b5e862a328d0782e444246169dcce0378a169891d476b47ab3
+
+All originals and routing reasons are retained. No API or model was called. Healthcare checks compare recorded IDs; they do not assess clinical correctness. BTV consumes scripted RHCA anchors, not scores inferred from event text.

@@ -1,0 +1,25 @@
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+export const RHCA=[
+ {id:'R',name:'Reasoning transparency',short:'Reasoning',color:'#536e87'},
+ {id:'H',name:'Helpfulness',short:'Helpfulness',color:'#527568'},
+ {id:'C',name:'Consistency',short:'Consistency',color:'#82708e'},
+ {id:'A',name:'Context alignment',short:'Context alignment',color:'#997642'}
+];
+const anchors=r=>Array.isArray(r?.original?.rhca)?r.original.rhca:[];
+export const validAnchor=v=>Number.isInteger(v)&&v>=1&&v<=3;
+export function hasDimensionIssue(record,id){return anchors(record).some(a=>validAnchor(a?.scores?.[id])&&a.scores[id]<3);}
+export function dimensionProfile(records,id){
+ const distribution=[0,0,0];let rated=0,affected=0,critical=0;
+ for(const record of records){const scores=anchors(record).map(r=>r?.scores?.[id]).filter(validAnchor);if(!scores.length)continue;rated++;affected+=Number(scores.some(s=>s<3));critical+=Number(scores.includes(1));for(const s of scores)distribution[s-1]++;}
+ return {rated,affected,critical,distribution,total:distribution.reduce((a,b)=>a+b,0)};
+}
+export function dimensionMatrix(records,{domain='all',dimension='all',names={},synthetic=false}={}){
+ const domains=[...new Set(records.map(r=>r.original?.domain||'unknown'))];
+ return '<div class="pipe-table-scroll rhca-matrix-scroll"><table class="rhca-matrix"><caption>Cells: trajectories with any supplied anchor below 3 / rated trajectories. Bars: checkpoint anchor distribution.'+(synthetic?' The same synthetic patterns repeat across domains.':'')+'</caption><thead><tr><th scope="col">Domain</th>'+RHCA.map(d=>'<th scope="col"><span class="rhca-letter" style="--dimension-color:'+d.color+'">'+d.id+'</span>'+d.name+'</th>').join('')+'</tr></thead><tbody>'+domains.map(group=>{const rows=records.filter(r=>(r.original?.domain||'unknown')===group);return '<tr><th scope="row">'+esc(names[group]||group)+'</th>'+RHCA.map(d=>{const p=dimensionProfile(rows,d.id);return '<td><button class="rhca-profile-cell '+(domain===group&&dimension===d.id?'is-selected':'')+'" data-rhca-dimension="'+d.id+'" data-domain="'+esc(group)+'" aria-label="'+esc(names[group]||group)+', '+d.name+': '+p.affected+' of '+p.rated+' rated trajectories have an anchor below 3" '+(!p.rated?'disabled':'')+'><span class="rhca-cell-number">'+(p.rated?'<strong>'+p.affected+'</strong><small>/ '+p.rated+'</small>':'<small>Not rated</small>')+'</span><span class="rhca-distribution" aria-hidden="true">'+p.distribution.map((n,i)=>'<i class="anchor-'+(i+1)+'" style="width:'+(p.total?100*n/p.total:0)+'%"></i>').join('')+'</span></button></td>';}).join('')+'</tr>';}).join('')+'</tbody></table><div class="rhca-legend"><span>SUPPLIED ANCHORS</span>'+[1,2,3].map(v=>'<span><i class="anchor-'+v+'"></i>'+v+'</span>').join('')+'<span>Click a cell to inspect affected trajectories</span></div></div>';
+}
+export function trajectoryMarkup(item,requested,selectedDimension='A'){
+ const rows=anchors(item);if(!rows.length)return '<div class="pipe-no-chart"><h3>No RHCA ratings supplied</h3><p>Event checks remain available. Missing ratings are not filled in.</p></div>';
+ const focus=Number.isInteger(requested)&&requested>=0&&requested<rows.length?requested:Math.max(0,rows.findIndex(r=>RHCA.some(d=>r?.scores?.[d.id]===1)));
+ const selected=RHCA.some(d=>d.id===selectedDimension)?selectedDimension:'A';
+ return '<figure class="rhca-time-matrix"><div class="rhca-trajectory-heading"><span>4 DIMENSIONS × '+rows.length+' CHECKPOINTS</span><span>Supplied scores · 1–3</span></div><div class="rhca-time-scroll"><table class="rhca-time-table" style="--checkpoint-count:'+rows.length+'"><caption class="sr-only">RHCA dimension-by-checkpoint rating matrix. Select a cell to inspect its recorded event.</caption><thead><tr><th scope="col">Checkpoint →</th>'+rows.map((r,i)=>'<th scope="col" class="'+(i===focus?'focused-column':'')+'">'+String(i+1).padStart(2,'0')+'</th>').join('')+'</tr></thead><tbody>'+RHCA.map(d=>'<tr class="rhca-matrix-lane" style="--dimension-color:'+d.color+'"><th scope="row"><span class="rhca-time-label"><span class="rhca-letter">'+d.id+'</span><strong>'+d.name+'</strong></span></th>'+rows.map((r,i)=>{const value=validAnchor(r?.scores?.[d.id])?r.scores[d.id]:null,isSelected=i===focus&&selected===d.id;return '<td class="'+(i===focus?'focused-column':'')+'"><button type="button" class="rhca-score-cell score-'+(value??'missing')+(isSelected?' is-selected':'')+'" data-rhca-checkpoint="'+i+'" data-rhca-cell="'+d.id+'" aria-pressed="'+isSelected+'" aria-label="'+d.name+', checkpoint '+(i+1)+', '+(value===null?'Not rated':'score '+value)+', event '+esc(r?.event_id||'not recorded')+'" title="'+d.id+' · '+esc(r?.event_id||'no event')+' · '+(value===null?'Not rated':value+'/3')+'"><span>'+ (value??'—')+'</span></button></td>';}).join('')+'</tr>').join('')+'</tbody></table></div><figcaption><span>Supplied RHCA anchors. Select a cell for its event. — = not reported.</span><span class="rhca-score-key"><i class="score-3"></i>3<i class="score-2"></i>2<i class="score-1"></i>1</span></figcaption></figure>';
+}

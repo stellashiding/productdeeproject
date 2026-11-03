@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "deeproject-rhca"
-version = "0.2.0a9"
+version = "0.2.0a13"
 description = "Configurable agent behavior and multi-turn evaluation with event evidence"
 requires-python = ">=3.10"
 readme = "README.md"
@@ -20,4 +20,4 @@ include-package-data = true
 where = ["python"]
 
 [tool.setuptools.package-data]
-deeproject = ["viewer/*", "viewer/data/*"]
+deeproject = ["viewer/*", "viewer/data/*", "viewer/data/pipeline/*", "viewer/data/filter/*", "viewer/data/public-audit/*"]

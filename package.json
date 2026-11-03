@@ -4,8 +4,10 @@
   "type": "module",
   "scripts": {
     "test": "node --test tests/*.test.mjs",
-    "check": "node --check dist/app.js && node --check dist/core.js && node --check dist/garden-scene.js && node --check dist/studio.js && node --check dist/specification.js && node --check dist/agent-contract.js && node --check dist/agent-studio.js",
+    "check": "node --check dist/app.js && node --check dist/core.js && node --check dist/garden-scene.js && node --check dist/studio.js && node --check dist/specification.js && node --check dist/agent-contract.js && node --check dist/agent-studio.js && node --check dist/btv.js && node --check dist/pipeline-contract.js && node --check dist/pipeline.js && node --check dist/pipeline-viz.js && node --check dist/audit.js",
     "test:harness": "PYTHONPATH=python python3 -m unittest discover -s tests -p 'test_*.py' -v",
-    "package:harness": "python3 scripts/package_harness.py"
+    "package:harness": "python3 scripts/package_harness.py",
+    "synthetic": "python3 scripts/run_synthetic.py",
+    "synthetic:filter": "python3 scripts/run_controlled_filter.py"
   }
 }

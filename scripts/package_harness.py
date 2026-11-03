@@ -12,4 +12,4 @@ shutil.copytree(root/'dist',viewer,ignore=shutil.ignore_patterns('downloads'))
 target=root/'dist'/'downloads'
 target.mkdir(exist_ok=True)
 subprocess.run([sys.executable,'-m','pip','wheel','--no-index','--no-deps','--no-build-isolation','--wheel-dir',str(target),str(root)],check=True)
-print(target/'deeproject_rhca-0.2.0a9-py3-none-any.whl')
+print(target/'deeproject_rhca-0.2.0a13-py3-none-any.whl')

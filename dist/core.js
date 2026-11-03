@@ -45,7 +45,7 @@ export function history(run, at, dimension, optionsForTurn=()=>({})){
 export function parseRoute(hash){
   const [page,search='']=(hash||'#home').replace(/^#/,'').split('?');
   const params=new URLSearchParams(search);
-  return {page:['home','garden','workbench','diagnostics','design','run','compare','docs'].includes(page)?page:'home',run:params.get('run')||'R06',turn:Math.max(1,parseInt(params.get('turn')||'1',10)||1),dimension:/^[A-Za-z][A-Za-z0-9_-]{0,63}$/.test(params.get('dim')||'')?params.get('dim'):'A'};
+  return {page:['home','garden','workbench','diagnostics','design','run','compare','docs','pipeline','public-audit'].includes(page)?page:'home',run:params.get('run')||'R06',turn:Math.max(1,parseInt(params.get('turn')||'1',10)||1),dimension:/^[A-Za-z][A-Za-z0-9_-]{0,63}$/.test(params.get('dim')||'')?params.get('dim'):'A'};
 }
 export function route(page,run='R06',turn=1,dimension='A'){return '#'+page+'?'+new URLSearchParams({run,turn:String(turn),dim:dimension})}
 export function validateRun(run){
